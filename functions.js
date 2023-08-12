@@ -266,8 +266,14 @@ let generateGeneralMatchDiv = (everyMatch) => {
     // Ako náhle vytvorím nový div tak bude hned naň naviazaný addeventlistener, ktorý má v sebe funkciu na vymazanie
 
     button.addEventListener("click", function(event){
-        generalMatchDiv.classList.add("activeLeagueMatch")
-        // saveLeagueMatches(leagueMatches)
+        if (button.textContent === "Upraviť"){
+            generalMatchDiv.classList.remove("activeLeagueMatch")
+            button.textContent = "Zapnúť"
+        } else if (button.textContent === "Zapnúť") {
+            generalMatchDiv.classList.add("activeLeagueMatch")
+            button.textContent = "Upraviť"
+            // saveLeagueMatches(leagueMatches)
+        } 
     })
 
     spanpl1.textContent = everyMatch.player1
