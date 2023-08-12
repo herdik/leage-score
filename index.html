@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tektur&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tektur&display=swap');
+    </style>
+    <!-- Google fonts -->
+
+    <link rel="stylesheet" href="style.css">
+    <title>Z-scoreboard</title>
+
+    
+
+</head>
+
+<body>
+
+    
+    <!-- Hlavný container -->
+    <div class="main-container">
+
+        <!-- Hlavný názov -->
+        <h1>BK MANILA " Z-scoreboard "</h1>
+
+
+        <!-- logo manila -->
+        <header>
+            <img src="img/logo-white-manila.png" alt="">
+        </header>
+        
+
+        <!-- Formulár pre zadanie názvu ligy -->
+        <div class="zero-container">
+            
+            <form id="leagueName-form">
+                <input type="text" placeholder="Názov ligy" name="leagueName">
+                <input type="submit" value="Potvrdiť" name="submitLeagueName">
+            </form>
+            <h1 class="heading-name-league">Názov ligy
+                <span class="left-icon"></span>
+                <span class="right-icon"></span>
+            </h1>
+        </div>
+
+        <!-- Nastavenia pre vytvorenie ligy + system-container -->
+
+        <div class="system-container">
+
+            <h1>Nastavenia ligy</h1>
+
+             <!-- Formulár pre registáciu hráča -->
+            <form id="league-settings">
+
+                <input type="checkbox" id="revenge" name="checkbox">
+                <label for="revenge">Odvety</label>
+                <!-- výber krajiny z options -->
+                <select id="match-settings" name="matchSettings">
+                    <option value="single">Jednotlivci</option>
+                    <option value="doubles">Dvojice</option>
+                    <option value="teams">Teamy</option>
+                </select><br>
+                
+                <input type="submit" value="Potvrdiť" name="submitForm"><br>
+
+                
+                
+        
+            </form>
+
+        </div>
+        
+
+        <!-- Prvý container-->
+        <div class="first-container">
+
+            <h1>" Registračný list "
+                <span class="left-icon"></span>
+                <span class="right-icon"></span>
+            </h1>
+
+            <!-- Formulár pre registáciu hráča -->
+            <form id="registration-form">
+
+                <input type="text" placeholder="Meno" name="firstName">
+                <input type="text" placeholder="Priezvisko" name="secondName"><br>
+                <input type="text" placeholder="Klub" name="playersClub">
+                <input type="submit" value="Zapísať" name="submitForm"><br>
+
+                <!-- výber krajiny z options -->
+                <select id="countries" name="countryOption">
+                    <option value="svk">🇸🇰&emsp; Slovakia</option>
+                    <option value="cz">🇨🇿&emsp; Czech republic</option>
+                    <option value="pl">🇵🇱&emsp; Poland</option>
+                </select>
+                
+        
+            </form>
+            
+
+        </div>
+        
+
+
+        <!-- Druhý container -->
+        
+
+        <div class="second-container hide">
+            <h1>Zoznam hráčov
+                <span class="left-icon"></span>
+                <span class="right-icon"></span>
+            </h1>
+
+            <!-- Zoznam registrovaných hráčov -->
+            <ol class="registered-players-list">
+                <!-- <li>
+                    <img src="img/slovakia-flag.png" alt="slovakia-flag">
+                    <div class="player-informations">
+                        <h3>Marián Brázdil</h3>
+                        <p>BK MANILA Topoľčany</p>
+                    </div>
+                </li>
+                
+                <li>
+                    <img src="img/slovakia-flag.png" alt="slovakia-flag">
+                    <div class="player-informations">
+                        <h3>Juraj Herda</h3>
+                        <p>BK MANILA Topoľčany</p>
+                    </div>
+                </li>
+                
+                <li>
+                    <img src="img/slovakia-flag.png" alt="slovakia-flag">
+                    <div class="player-informations">
+                        <h3>Jaroslav Bajzík</h3>
+                        <p>BK MANILA Topoľčany</p>
+                    </div>
+                </li> -->
+                
+            </ol>
+            
+
+        </div>
+
+
+        <div class="createLeague-container">
+            <button>Vytvoriť ligu</button>
+        </div>
+
+
+        
+        <!-- Názov heading Liga -->
+
+        <div class="leagueHeading">
+            <h1>Názov Ligy
+                <span class="left-icon"></span>
+                <span class="right-icon"></span>
+            </h1>
+        </div>
+
+
+        <!-- Liga Rozpis -->
+        
+        <div class="league-matches">
+            <!-- <div class="leagueRound">
+                <h1>1.kolo</h1>
+                <div class="general-match">
+                    <span class="pl1-span">Brázdil</span>
+                    <label class="pl1-label">0</label>
+                    <button>Zapnúť</button>
+                    <label class="pl2-label">0</label>
+                    <span class="pl2-span">Gabriel Katona</span>
+                </div>
+                <div class="general-match">
+                    <span class="pl1-span">Juraj Herda</span>
+                    <label class="pl1-label">0</label>
+                    <button>Zapnúť</button>
+                    <label class="pl2-label">0</label>
+                    <span class="pl2-span">Gabriel Katona</span>
+                </div>
+            </div> -->
+        </div>
+        
+
+    </div>
+
+
+    <dialog>
+        <h1>Nadpis</h1>
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum ratione dignissimos tempora dolore aut ipsam molestiae, rem laboriosam quod nostrum possimus, fugit velit est vel inventore totam reiciendis sed perferendis!
+            Beatae unde quasi, architecto id ipsa eaque illum? Quo soluta ad quis, blanditiis aliquam quod. At sapiente officiis recusandae ut, dolor reiciendis, eum saepe, necessitatibus vel quidem quasi eos quod!
+        </p>
+    </dialog>
+
+    
+    <script src="uuidv4.js"></script>
+    <script src="functions.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

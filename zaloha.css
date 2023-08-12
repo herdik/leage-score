@@ -1,0 +1,254 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Tektur', cursive;
+}
+
+/* default nastavenia pre outline */
+input:focus {
+    outline: none;
+}
+
+/* Hlavný container */
+.main-container {
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hlavný názov */
+.main-container h1 {
+    text-align: center;
+}
+
+/* header a nastavenia pre header a pozadie */
+header {
+    
+    width: 20%;
+    min-height: 180px;
+    background-color: #585454;
+    border-radius: 20px;
+    box-shadow: 0 0 10px 10px #888888;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px auto;
+}
+
+/* logo manila v header plus animácia */
+header img {
+    width: 150px;
+    animation: floatation 3s alternate infinite linear;
+}
+
+/* Formulár pre zadanie názvu ligy */
+#leagueName-form {
+    text-align: center;
+    margin: 30px 20px;
+}
+
+/* Prvý container */
+.first-container {
+    width: 100%;
+    min-height: 30vh;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 20px;
+    margin: 20px 0;
+    box-shadow: 0 0 10px 10px #888888;
+}
+
+/* Prvý container nadpis */
+.first-container h1 {
+    text-align: center;
+    margin-top: 30px;
+    
+}
+
+/* Formulár pre registáciu hráča */
+#registration-form {
+    text-align: center;
+    margin: 30px 20px;
+}
+
+/* Input pre registráciu hráča a pre zadanie názvu ligy */
+#registration-form input, #leagueName-form input{
+    margin-bottom: 10px;
+    margin-left: 10px;
+    padding: 8px 0;
+    text-align: center;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+/* Submit button pre registráciu hráča a pre zadanie názvu ligy */
+#registration-form input[type=submit], #leagueName-form input[type=submit]{
+    padding: 8px 15px;
+    text-align: center;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* výber krajiny z options */
+#countries {
+    border-radius: 20px;
+    background-color: transparent;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+} 
+
+
+/* Druhý container */
+.second-container {
+    /* reset pre číslovanie položiek v zozname */
+    counter-reset: section;
+    width: 70%;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 20px;
+    margin: 40px 0;
+    box-shadow: 0 0 10px 10px #888888;
+    padding-top: 15px;
+}
+
+/* Zoznam registrovaných hráčov Hlavý nadpis Heading */
+.second-container h1 {
+    margin-bottom: 10px;
+}
+
+/* Zoznam registrovaných hráčov */
+.registered-players-list {
+    background-color: rgba(255, 255, 255, 0.977);
+    max-height: 800px;
+    border-radius: 20px;
+    /* slúži pre vytvorenie scrollovacej lišty ak obsah je vačší ako je ho možné zobraziť */
+    overflow-y: auto;
+}
+
+/* Zoznam registrovaných hráčov POLOŽKY */
+.registered-players-list li {
+    display: flex;
+    padding: 10px 50px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* Číslovanie zoznamu registrovaných hráčov */
+.registered-players-list li::before {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    counter-increment: section; 
+    content: "Hráč č."counter(section) ;
+}
+
+/* obrázok vlajky pre registrovnú položku */
+.registered-players-list img {
+    border-radius: 15px;
+    width: 50px;
+    height: 50px;
+    margin-left: 100px;
+}
+
+/* Informácie o hráčovi */
+.player-informations {
+    margin-left: 30px;
+}
+
+/* Delete button player */
+.removeBtn {
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    transform: translateX(-10%);
+    transform: translateY(-50%);
+    border-radius: 20px;
+    padding: 8px 15px;
+    text-align: center;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+
+}
+
+
+/* League matches */
+.league-matches {
+    width: 100%;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 20px;
+    margin: 40px 0;
+    box-shadow: 0 0 10px 10px #888888;
+}
+
+/* One match line */
+.general-round {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 10px;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 20px;
+    box-shadow: 0 0 3px 3px #888888;
+    padding: 5px;
+}
+
+/* Players in one match line */
+.general-round label {
+    width: 45%;
+}
+
+/* Score in one match line */
+.general-round input[type=number] {
+    width: 5%;
+    padding: 5px;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 15px;
+    box-shadow: 0 0 3px 3px #888888;
+}
+
+.general-round input[type=text] {
+    width: 5%;
+    text-align: center;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 15px;
+    box-shadow: 0 0 3px 3px #888888;
+}
+
+/* Button in one match line */
+.general-round button {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 20px;
+    margin: 0 10px;
+    padding: 5px 10px;
+}
+
+
+/* classa pre skrytie leagueHeading - názov ligy */
+.hide {
+    display: none;
+}
+
+/* Animácia pre LOGO */
+/* floating keyframes */
+@keyframes floatation {
+    0% {
+        transform: translateY(15px);
+    }
+
+    100% {
+        transform: translateY(-15px);
+    }
+}

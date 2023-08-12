@@ -1,0 +1,471 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Tektur', cursive;
+}
+
+/* default nastavenia pre outline */
+input:focus {
+    outline: none;
+}
+
+/* Hlavný container */
+.main-container {
+    max-width: 1140px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hlavný názov */
+.main-container h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* header a nastavenia pre header a pozadie */
+header {
+    
+    width: 20%;
+    min-height: 180px;
+    background-color: #585454;
+    border-radius: 20px;
+    box-shadow: 0 0 10px 10px #888888;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px auto;
+}
+
+/* logo manila v header plus animácia */
+header img {
+    width: 150px;
+    animation: floatation 3s alternate infinite linear;
+}
+
+/* Heading League Name and form leagueName */
+/* zero container */
+.zero-container {
+    position: relative;
+}
+
+/* h1 zero-container Heading League Name */
+.heading-name-league {
+    position: absolute;
+    top: 7px;
+    left: 0;
+    background-color: #fff;
+    transform: translateX(100px);
+    cursor: pointer;
+    transition: transform .5s linear;
+}
+
+/* icona šípka dole a hore + aktívna a neaktína pre zero-container*/
+.zero-container .left-icon,
+.zero-container .right-icon {
+    position: relative;
+    display: inline-block;
+    width: 15px;
+    height: 5px;
+    background: black;
+    bottom: 8px;
+} 
+.zero-container .left-icon {
+    left: 16px;
+    bottom: 12px;
+    transform: rotate(45deg);
+}
+.zero-container .right-icon {
+    right: 8px;
+    top: -4px;
+    transform: rotate(135deg);
+}
+.zero-container .left-icon.active-left {
+    transform: rotate(135deg); 
+}
+.zero-container .right-icon.active-right {
+    transform: rotate(45deg);
+}
+
+
+/* Formulár pre zadanie názvu ligy */
+#leagueName-form {
+    opacity: 0;
+    text-align: center;
+    margin: 30px 20px;
+    transition: opacity .5s linear;
+}
+
+
+/* Systémové nastavania ligy + system-container  */
+.system-container {
+    width: 50%;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 20px;
+    margin: 10px 0 30px 0;
+    box-shadow: 0 0 10px 10px #888888;
+    padding-top: 15px;
+
+}
+#league-settings {
+    text-align: center;
+    margin: 15px 20px;
+}
+#league-settings input {
+    margin-bottom: 20px;
+    margin-left: 10px;
+    padding: 8px 0;
+    text-align: center;
+    border-radius: 20px;
+    font-size: 14px;
+}
+#league-settings input[type=submit] {
+    padding: 8px 15px;
+    text-align: center;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+}
+#league-settings label {
+    font-size: 18px;
+}
+#match-settings {
+    border-radius: 20px;
+    background-color: transparent;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+
+
+
+/* Prvý container */
+.first-container {
+    width: 100%;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 20px;
+    margin: 20px 0;
+    box-shadow: 0 0 10px 10px #888888;
+}
+
+/* Prvý container nadpis */
+.first-container h1 {
+    text-align: center;
+    margin-top: 30px;
+    cursor: pointer;
+    
+}
+/* icona šípka dole a hore + aktívna a neaktína pre first-container*/
+.first-container .left-icon,
+.first-container .right-icon {
+    position: relative;
+    display: inline-block;
+    width: 15px;
+    height: 5px;
+    background: black;
+    bottom: 8px;
+} 
+.first-container .left-icon {
+    left: 17px;
+    transform: rotate(45deg);
+}
+.first-container .right-icon {
+    transform: rotate(135deg);
+}
+.first-container .left-icon.active-left {
+    transform: rotate(135deg); 
+}
+.first-container .right-icon.active-right {
+    transform: rotate(45deg);
+}
+
+/* Formulár pre registáciu hráča */
+#registration-form {
+    text-align: center;
+    margin: 10px 20px;
+    max-height: 0px;
+    overflow-y: hidden;
+    transition: max-height .5s ease-out, opacity .5s linear;
+    opacity: 0;
+}
+
+
+/* Input pre registráciu hráča a pre zadanie názvu ligy */
+#registration-form input, #leagueName-form input{
+    margin-bottom: 10px;
+    margin-left: 10px;
+    padding: 8px 0;
+    text-align: center;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+/* Submit button pre registráciu hráča a pre zadanie názvu ligy */
+#registration-form input[type=submit], #leagueName-form input[type=submit]{
+    padding: 8px 15px;
+    text-align: center;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* výber krajiny z options */
+#countries {
+    border-radius: 20px;
+    background-color: transparent;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    padding-left: 10px;
+    padding-right: 10px;
+} 
+
+
+/* Druhý container */
+.second-container {
+    /* reset pre číslovanie položiek v zozname */
+    counter-reset: section;
+    width: 70%;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 20px;
+    margin: 40px 0;
+    box-shadow: 0 0 10px 10px #888888;
+    padding-top: 15px;
+}
+
+/* Zoznam registrovaných hráčov Hlavý nadpis Heading */
+.second-container h1 {
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+/* icona šípka dole a hore + aktívna a neaktína pre second-container*/
+.second-container .left-icon,
+.second-container .right-icon {
+    position: relative;
+    display: inline-block;
+    width: 15px;
+    height: 5px;
+    background: black;
+    bottom: 8px;
+} 
+.second-container .left-icon {
+    left: 17px;
+    transform: rotate(45deg);
+}
+.second-container .right-icon {
+    transform: rotate(135deg);
+}
+.second-container .left-icon.active-left {
+    transform: rotate(135deg); 
+}
+.second-container .right-icon.active-right {
+    transform: rotate(45deg);
+}
+
+
+
+/* Zoznam registrovaných hráčov */
+/* nastavenia pre skrytých */
+.registered-players-list {
+    background-color: rgba(255, 255, 255, 0.977);
+    max-height: 10px;
+    border-radius: 20px;
+    /* slúži pre vytvorenie scrollovacej lišty ak obsah je vačší ako je ho možné zobraziť */
+    overflow-y: hidden;
+    transition: max-height .8s ease-out, opacity 1.2s linear;
+    opacity: 0;
+}
+/* nastavenia pre zobrazených registrovaných hráčov*/
+.show-registered-player-list {
+    max-height: 800px;
+    overflow-y: auto;
+    transition: max-height 1s ease-in, opacity 1s linear;
+    opacity: 1;
+}
+
+/* Zoznam registrovaných hráčov POLOŽKY */
+.registered-players-list li {
+    display: flex;
+    padding: 10px 50px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* Číslovanie zoznamu registrovaných hráčov */
+.registered-players-list li::before {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    counter-increment: section; 
+    content: "Hráč č."counter(section) ;
+}
+
+/* obrázok vlajky pre registrovnú položku */
+.registered-players-list img {
+    border-radius: 15px;
+    width: 50px;
+    height: 50px;
+    margin-left: 100px;
+}
+
+/* Informácie o hráčovi */
+.player-informations {
+    margin-left: 30px;
+}
+
+/* Delete button player */
+.removeBtn {
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    transform: translateX(-10%);
+    transform: translateY(-50%);
+    border-radius: 20px;
+    padding: 8px 15px;
+    text-align: center;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+
+}
+
+/* createLeague-container + Vytvorenie ligy button */
+
+.createLeague-container {
+    width: 30%;
+    margin-bottom: 20px;
+}
+
+.createLeague-container button {
+    width: 100%;
+    height: 50px;
+    border-radius: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+
+
+/* League heading from User show */
+/* nastavenia pre zobrazených registrovaných hráčov*/
+.leagueHeading h1 {
+    cursor: pointer;
+}
+/* icona šípka dole a hore + aktívna a neaktína pre first-container*/
+.leagueHeading .left-icon,
+.leagueHeading .right-icon {
+    position: relative;
+    display: inline-block;
+    width: 15px;
+    height: 5px;
+    background: black;
+    bottom: 8px;
+} 
+.leagueHeading .left-icon {
+    left: 17px;
+    transform: rotate(45deg);
+}
+.leagueHeading .right-icon {
+    transform: rotate(135deg);
+}
+.leagueHeading .left-icon.active-left {
+    transform: rotate(135deg); 
+}
+.leagueHeading .right-icon.active-right {
+    transform: rotate(45deg);
+}
+
+
+/* League matches */
+.league-matches {
+    width: 100%;
+    max-height: 0;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 20px;
+    margin: 40px 0;
+    box-shadow: 0 0 10px 10px #888888;
+    overflow-y: hidden;
+    transition: max-height .8s ease-out, opacity 1.2s linear;
+    opacity: 0;
+}
+
+.show-league-matches {
+    max-height: 800px;
+    overflow-y: auto;
+    transition: max-height 1s ease-in, opacity 1s linear;
+    opacity: 1;
+}
+
+/* One match line */
+.general-match {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 10px;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 20px;
+    box-shadow: 0 0 3px 3px #888888;
+    padding: 5px;
+}
+
+/* Aktívny zápas, ktorý sa hrá */
+.activeLeagueMatch {
+    background-color: rgb(7, 176, 120);
+    color: #fff;
+}
+
+/* Players in one match line */
+.general-match span {
+    width: 45%;
+}
+
+/* Score in one match line */
+.general-match label {
+    padding: 10px;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 15px;
+    box-shadow: 0 0 3px 3px #888888;
+}
+
+/* Button in one match line */
+.general-match button {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 20px;
+    margin: 0 10px;
+    padding: 5px 10px;
+}
+
+
+/* classa pre skrytie leagueHeading - názov ligy */
+.hide {
+    display: none;
+}
+
+/* Animácia pre LOGO */
+/* floating keyframes */
+@keyframes floatation {
+    0% {
+        transform: translateY(15px);
+    }
+
+    100% {
+        transform: translateY(-15px);
+    }
+}
+
