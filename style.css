@@ -479,7 +479,6 @@ header img {
     transform: translateX(-50%) translateY(100%);
     border-radius: 20px;
     border: 5px solid rgba(0, 0, 0, 0.608);
-    text-align: center;
     box-shadow: 0 0 3px 3px #888888;
 }
 #matchForm {
@@ -487,7 +486,6 @@ header img {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    text-align: center;
     margin: 10px;
     padding: 5px;
 }
@@ -505,10 +503,15 @@ header img {
 }
 .modal-players {
     width: 40%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 #modal input[type="number"]{
-    width: 80px;
-    padding: 6px 8px;
+    width: 30%;
+    padding: 6px 5px;
     font-size: 18px;
     text-align: center;
     border-radius: 20px;
@@ -524,8 +527,9 @@ header img {
     font-size: 14px;
     margin: 5px 10px;
 }
-#modal span {
-    margin: 5px 10px;
+.modal-players span {
+    width: 70%;
+    padding: 5px;
 }
 
 
