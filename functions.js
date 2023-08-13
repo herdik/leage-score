@@ -265,12 +265,14 @@ let generateGeneralMatchDiv = (everyMatch) => {
     const button = document.createElement("button")
     button.textContent = "Zapnúť"
 
+    const modalWindow = document.querySelector("#modal")
+
     // Ako náhle vytvorím nový div tak bude hned naň naviazaný addeventlistener, ktorý má v sebe funkciu na vymazanie
 
     button.addEventListener("click", function(event){
         startLeagueMatchActive(leagueMatches, everyMatch.matchId)
         if (button.textContent === "Upraviť"){
-            document.querySelector("#modal").showModal()
+            modalWindow.showModal()
             console.log(document.querySelector(".pl1-span").textContent)
 
             // generalMatchDiv.classList.remove("activeLeagueMatch")

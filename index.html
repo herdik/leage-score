@@ -163,10 +163,12 @@
                 <span class="right-icon"></span>
             </h1>
             <dialog id="modal">
-                    <form id="matchForm">
+                    <form id="matchForm" method="dialog">
                         <h1>Ligový zápas</h1>
-                        <input id="closeMatch" type="submit" 
-                        value="Ukončiť" name="finishMatch">
+                        <input type="checkbox" id="checkFinish" name="checkFinish">
+                        <label for="checkFinish">Ukončiť zápas</label>
+                        <!-- <input id="closeMatch" type="submit" 
+                        value="Ukončiť" name="finishMatch"> -->
                         <div class="matchInfo">
                             <div class="modal-players">
                                 <span class="pl1-span">Marián</span>
