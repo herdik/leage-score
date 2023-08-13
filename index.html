@@ -162,12 +162,34 @@
                 <span class="left-icon"></span>
                 <span class="right-icon"></span>
             </h1>
+            <dialog id="modal">
+                    <form id="matchForm">
+                        <h1>Ligový zápas</h1>
+                        <input id="closeMatch" type="submit" 
+                        value="Ukončiť" name="finishMatch">
+                        <div class="matchInfo">
+                            <div class="modal-players">
+                                <span class="pl1-span">Marián Br</span>
+                                <input type="number" class="pl1-label" min="0" value="0" step="1">
+                            </div>
+                            
+                            <input type="submit" id="saveBtn"n value="Uložiť" name="saveMatch">
+
+                            <div class="modal-players">
+                                <input type="number" class="pl2-label" min="0" value="0" step="1">
+                                <span class="pl2-span">Gabriel Katona</span>
+                            </div>
+                        </div>
+                    </form>
+            </dialog>
         </div>
 
 
         <!-- Liga Rozpis -->
         
-        <div class="league-matches">
+        
+        <div class="league-matches show-league-matches">
+            
             <!-- <div class="leagueRound">
                 <h1>1.kolo</h1>
                 <div class="general-match">
@@ -185,19 +207,14 @@
                     <span class="pl2-span">Gabriel Katona</span>
                 </div>
             </div> -->
+            
         </div>
         
 
     </div>
 
 
-    <dialog>
-        <h1>Nadpis</h1>
-        <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum ratione dignissimos tempora dolore aut ipsam molestiae, rem laboriosam quod nostrum possimus, fugit velit est vel inventore totam reiciendis sed perferendis!
-            Beatae unde quasi, architecto id ipsa eaque illum? Quo soluta ad quis, blanditiis aliquam quod. At sapiente officiis recusandae ut, dolor reiciendis, eum saepe, necessitatibus vel quidem quasi eos quod!
-        </p>
-    </dialog>
+    
 
     
     <script src="uuidv4.js"></script>

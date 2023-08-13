@@ -185,6 +185,7 @@ let create_league = function(checkedTeams, revengeMatch) {
         for (let i = 0; i < matchesInRound; i++) {
             one_round.push({
                 matchStart: false,
+                matchFinished: false,
                 matchId: uuidv4(),
                 player1: checkedTeams[i], 
                 score1: 0,
@@ -194,6 +195,7 @@ let create_league = function(checkedTeams, revengeMatch) {
             if (returnMatches) {
                 revengeMatches.push({
                     matchStart: false,
+                    matchFinished: false,
                     matchId: uuidv4(),
                     player1: checkedTeams[(checkedTeams.length -1) - i],
                     score1: 0,
