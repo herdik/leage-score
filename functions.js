@@ -268,15 +268,23 @@ let generateGeneralMatchDiv = (everyMatch) => {
     // Ako náhle vytvorím nový div tak bude hned naň naviazaný addeventlistener, ktorý má v sebe funkciu na vymazanie
 
     button.addEventListener("click", function(event){
+        startLeagueMatchActive(leagueMatches, everyMatch.matchId)
         if (button.textContent === "Upraviť"){
-            generalMatchDiv.classList.remove("activeLeagueMatch")
-            button.textContent = "Zapnúť"
+            document.querySelector("#modal").showModal()
+            console.log(document.querySelector(".pl1-span").textContent)
+
+            // generalMatchDiv.classList.remove("activeLeagueMatch")
+            // button.textContent = "Zapnúť"
         } else if (button.textContent === "Zapnúť") {
             generalMatchDiv.classList.add("activeLeagueMatch")
             button.textContent = "Upraviť"
-            // saveLeagueMatches(leagueMatches)
         } 
     })
+
+    if (everyMatch.matchStart) {
+        generalMatchDiv.classList.add("activeLeagueMatch")
+        button.textContent = "Upraviť"
+    } 
 
     spanpl1.textContent = everyMatch.player1
     labelpl1.textContent = everyMatch.score1
@@ -292,6 +300,30 @@ let generateGeneralMatchDiv = (everyMatch) => {
 
     return generalMatchDiv
 
+}
+
+// Funckia pre zapnutie vybraného zápasu a zmena matchStart na true a zmena pozadia aktívneho zápasu
+let startLeagueMatchActive = (allMatches, matchID) => {
+    let indexArray = []
+    allMatches.forEach((oneRound, mainIndex) => {
+        let index = oneRound.findIndex((matchStatusStart) => {
+            if (matchStatusStart.matchId === matchID) {
+                indexArray.push(mainIndex)
+                return matchStatusStart.matchId === matchID
+            }
+            
+        })
+        if (index > -1) {
+            indexArray.push(index)
+        }
+        
+    })
+
+    if (indexArray.length === 2){  
+        allMatches[indexArray[0]][indexArray[1]].matchStart = true
+        saveLeagueMatches(leagueMatches)  
+    }
+    
 }
 
 
@@ -322,7 +354,3 @@ let printLeagueMatches = () => {
 
     }
 }
-
-
-
-

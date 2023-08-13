@@ -205,14 +205,3 @@ if (getLeagueName().length <= 0){
 
 // zavolanie funkcie pre vykreslenie ligových zápasov do div .league-matches po otvorení prehliadača/stránky
 printLeagueMatches()
-
-console.log(leagueMatches)
-
-
-
-
-
-
-
-
-
