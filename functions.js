@@ -270,6 +270,7 @@ let generateGeneralMatchDiv = (everyMatch) => {
     button.addEventListener("click", function(event){ 
         if (button.textContent === "Upraviť"){
             let leagueIndexes2 = getIndexSelectedMatch(leagueMatches, everyMatch.matchId)
+            // Funckia pre zmenu stavu aktívneho zápasu
             modifyModal(leagueMatches[leagueIndexes2[0]][leagueIndexes2[1]])
             
             // generalMatchDiv.classList.remove("activeLeagueMatch")
@@ -328,6 +329,7 @@ let getIndexSelectedMatch = (allMatches, matchID) => {
     
 }
 
+// Funckia pre zmenu stavu aktívneho zápasu
 let modifyModal = (selectedMatch) => {
     let firstPlayer = selectedMatch.player1
     let firstPlayerScore = selectedMatch.score1
@@ -343,19 +345,24 @@ let modifyModal = (selectedMatch) => {
     modalWindow.showModal()
 
     document.querySelector("#matchForm").addEventListener("submit", (event) => {
-                // vypnutie update/refresh formulára po odoslaní
-                event.preventDefault()
+        // vypnutie update/refresh formulára po odoslaní
+        event.preventDefault()
 
-                let checkbox = event.target.checkFinish.checked
-                let playerScore1 = event.target.score1.value
-                let playerScore2 = event.target.score2.value
-                console.log(checkbox)
-                console.log(playerScore1)
-                console.log(playerScore2)
-                modalWindow.close()
+        let checkbox = event.target.checkFinish.checked
+        let playerScore1 = event.target.score1.value
+        let playerScore2 = event.target.score2.value
+        console.log(checkbox)
+        console.log(playerScore1)
+        console.log(playerScore2)
+        selectedMatch.score1 = playerScore1
+        selectedMatch.score2 = playerScore2
+        saveLeagueMatches(leagueMatches)
+        printLeagueMatches()
 
-                // defaultné hodnoty
-                event.target.checkFinish.checked = false
+        modalWindow.close()
+
+        // defaultné hodnoty
+        event.target.checkFinish.checked = false
 
     })
 }
