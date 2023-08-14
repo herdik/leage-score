@@ -265,29 +265,13 @@ let generateGeneralMatchDiv = (everyMatch) => {
     const button = document.createElement("button")
     button.textContent = "Zapnúť"
 
-    const modalWindow = document.querySelector("#modal")
-
     // Ako náhle vytvorím nový div tak bude hned naň naviazaný addeventlistener, ktorý má v sebe funkciu na vymazanie
 
     button.addEventListener("click", function(event){ 
         if (button.textContent === "Upraviť"){
-            document.querySelector(".pl1-span").textContent = "ˇžofre"
-            modalWindow.showModal()
+            let leagueIndexes2 = getIndexSelectedMatch(leagueMatches, everyMatch.matchId)
+            modifyModal(leagueMatches[leagueIndexes2[0]][leagueIndexes2[1]])
             
-            document.querySelector("#matchForm").addEventListener("submit", (event) => {
-                // vypnutie update/refresh formulára po odoslaní
-                event.preventDefault()
-
-                console.log(event)
-                let checkbox = event.target.checkFinish.checked
-                let score1 = event.target.score1.value
-                console.log(checkbox)
-                console.log(score1)
-                modalWindow.close()
-                event.target.checkFinish.checked = false
-                event.target.score1.value = 0
-
-            })
             // generalMatchDiv.classList.remove("activeLeagueMatch")
             // button.textContent = "Zapnúť"
         } else if (button.textContent === "Zapnúť") {
@@ -342,6 +326,38 @@ let getIndexSelectedMatch = (allMatches, matchID) => {
          
     }
     
+}
+
+let modifyModal = (selectedMatch) => {
+    let firstPlayer = selectedMatch.player1
+    let firstPlayerScore = selectedMatch.score1
+    let secondPlayer = selectedMatch.player2
+    let secondPlayerScore = selectedMatch.score2
+    const modalWindow = document.querySelector("#modal")
+
+    document.querySelector(".pl1-span").textContent = firstPlayer
+    document.querySelector(".pl1-label").value = firstPlayerScore
+    document.querySelector(".pl2-span").textContent = secondPlayer
+    document.querySelector(".pl2-label").value = secondPlayerScore
+    
+    modalWindow.showModal()
+
+    document.querySelector("#matchForm").addEventListener("submit", (event) => {
+                // vypnutie update/refresh formulára po odoslaní
+                event.preventDefault()
+
+                let checkbox = event.target.checkFinish.checked
+                let playerScore1 = event.target.score1.value
+                let playerScore2 = event.target.score2.value
+                console.log(checkbox)
+                console.log(playerScore1)
+                console.log(playerScore2)
+                modalWindow.close()
+
+                // defaultné hodnoty
+                event.target.checkFinish.checked = false
+
+    })
 }
 
 
