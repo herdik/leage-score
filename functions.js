@@ -269,17 +269,33 @@ let generateGeneralMatchDiv = (everyMatch) => {
 
     // Ako náhle vytvorím nový div tak bude hned naň naviazaný addeventlistener, ktorý má v sebe funkciu na vymazanie
 
-    button.addEventListener("click", function(event){
-        startLeagueMatchActive(leagueMatches, everyMatch.matchId)
+    button.addEventListener("click", function(event){ 
         if (button.textContent === "Upraviť"){
+            document.querySelector(".pl1-span").textContent = "ˇžofre"
             modalWindow.showModal()
-            console.log(document.querySelector(".pl1-span").textContent)
+            
+            document.querySelector("#matchForm").addEventListener("submit", (event) => {
+                // vypnutie update/refresh formulára po odoslaní
+                event.preventDefault()
 
+                console.log(event)
+                let checkbox = event.target.checkFinish.checked
+                let score1 = event.target.score1.value
+                console.log(checkbox)
+                console.log(score1)
+                modalWindow.close()
+                event.target.checkFinish.checked = false
+                event.target.score1.value = 0
+
+            })
             // generalMatchDiv.classList.remove("activeLeagueMatch")
             // button.textContent = "Zapnúť"
         } else if (button.textContent === "Zapnúť") {
             generalMatchDiv.classList.add("activeLeagueMatch")
             button.textContent = "Upraviť"
+            let leagueIndexes = getIndexSelectedMatch(leagueMatches, everyMatch.matchId)
+            leagueMatches[leagueIndexes[0]][leagueIndexes[1]].matchStart = true
+            saveLeagueMatches(leagueMatches)
         } 
     })
 
@@ -305,7 +321,7 @@ let generateGeneralMatchDiv = (everyMatch) => {
 }
 
 // Funckia pre zapnutie vybraného zápasu a zmena matchStart na true a zmena pozadia aktívneho zápasu
-let startLeagueMatchActive = (allMatches, matchID) => {
+let getIndexSelectedMatch = (allMatches, matchID) => {
     let indexArray = []
     allMatches.forEach((oneRound, mainIndex) => {
         let index = oneRound.findIndex((matchStatusStart) => {
@@ -322,8 +338,8 @@ let startLeagueMatchActive = (allMatches, matchID) => {
     })
 
     if (indexArray.length === 2){  
-        allMatches[indexArray[0]][indexArray[1]].matchStart = true
-        saveLeagueMatches(leagueMatches)  
+        return indexArray
+         
     }
     
 }
