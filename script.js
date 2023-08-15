@@ -196,6 +196,12 @@ document.querySelector(".createLeague-container button").addEventListener("click
     // zavolanie funkcie pre vykreslenie ligových zápasov do div .league-matches po otvorení prehliadača/stránky
     printLeagueMatches()
 
+    // zavolanie funkcie pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
+    generateHtmlPrintLeagueTable(leagueTable)
+
+    // zavolanie funkcie pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
+    // generateHtmlPrintLeagueTable()
+
     // default settings pre getMainLeagueSettings
     getMainLeagueSettings = []
   
@@ -227,3 +233,6 @@ if (getLeagueName().length <= 0){
 
 // zavolanie funkcie pre vykreslenie ligových zápasov do div .league-matches po otvorení prehliadača/stránky
 printLeagueMatches()
+
+// zavolanie funkcie pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
+generateHtmlPrintLeagueTable(leagueTable)

@@ -418,3 +418,29 @@ let printLeagueMatches = () => {
 
     }
 }
+
+// funkcia pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
+let generateHtmlPrintLeagueTable = (tableInfo) => {
+
+    if (localStorage.getItem("table") !== null){
+        const tableDiv = document.querySelector(".results-table tbody")
+    tableDiv.innerHTML = ""
+    
+    tableInfo.forEach((onePlayer, number) => {
+        const tbodyTr = document.createElement("tr")
+        tbodyTr.innerHTML = `
+        <td>${number + 1}</td>
+        <td>${onePlayer.playerName}</td>
+        <td>${onePlayer.playedMatches}</td>
+        <td>${onePlayer.wins}</td>
+        <td>${onePlayer.losses}</td>
+        <td>${onePlayer.difference}</td>
+        <td>${onePlayer.points}</td>
+        `
+        tableDiv.append(tbodyTr)
+    })
+    }
+    
+
+    
+}
