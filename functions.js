@@ -206,9 +206,11 @@ let create_league = function(checkedTeams, revengeMatch) {
                 matchStart: false,
                 matchFinished: false,
                 matchId: uuidv4(),
-                player1: checkedTeams[i], 
+                player1: checkedTeams[i].player,
+                player1Id: checkedTeams[i].playerId, 
                 score1: 0,
-                player2 :checkedTeams[(checkedTeams.length -1) - i],
+                player2 :checkedTeams[(checkedTeams.length -1) - i].player,
+                player2Id: checkedTeams[(checkedTeams.length -1) - i].playerId,
                 score2: 0,
             })
             if (returnMatches) {
@@ -216,9 +218,11 @@ let create_league = function(checkedTeams, revengeMatch) {
                     matchStart: false,
                     matchFinished: false,
                     matchId: uuidv4(),
-                    player1: checkedTeams[(checkedTeams.length -1) - i],
+                    player1: checkedTeams[(checkedTeams.length -1) - i].player,
+                    player1Id: checkedTeams[(checkedTeams.length -1) - i].playerId,
                     score1: 0,
-                    player2 : checkedTeams[i], 
+                    player2 : checkedTeams[i].player,
+                    player2Id: checkedTeams[i].playerId, 
                     score2: 0,
                 })
             }

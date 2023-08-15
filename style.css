@@ -456,6 +456,103 @@ header img {
 }
 
 
+/* Druhý container */
+.result-container {
+    /* reset pre číslovanie položiek v zozname */
+    counter-reset: section;
+    width: 70%;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 20px;
+    margin: 40px 0;
+    box-shadow: 0 0 10px 10px #888888;
+    padding-top: 15px;
+}
+
+/* Zoznam registrovaných hráčov Hlavý nadpis Heading */
+.result-container h1 {
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+/* icona šípka dole a hore + aktívna a neaktína pre second-container*/
+.result-container .left-icon,
+.result-container .right-icon {
+    position: relative;
+    display: inline-block;
+    width: 15px;
+    height: 5px;
+    background: black;
+    bottom: 8px;
+} 
+.result-container .left-icon {
+    left: 17px;
+    transform: rotate(45deg);
+}
+.result-container .right-icon {
+    transform: rotate(135deg);
+}
+.result-container .left-icon.active-left {
+    transform: rotate(135deg); 
+}
+.result-container .right-icon.active-right {
+    transform: rotate(45deg);
+}
+
+
+
+/* Zoznam registrovaných hráčov */
+/* nastavenia pre skrytých */
+.result-players-list {
+    background-color: rgba(255, 255, 255, 0.977);
+    max-height: 10px;
+    border-radius: 20px;
+    /* slúži pre vytvorenie scrollovacej lišty ak obsah je vačší ako je ho možné zobraziť */
+    overflow-y: hidden;
+    transition: max-height .8s ease-out, opacity 1.2s linear;
+    opacity: 0;
+}
+/* nastavenia pre zobrazených registrovaných hráčov*/
+.show-result-players-list {
+    max-height: 800px;
+    overflow-y: auto;
+    transition: max-height 1s ease-in, opacity 1s linear;
+    opacity: 1;
+}
+
+/* Zoznam registrovaných hráčov POLOŽKY */
+.result-players-list li {
+    display: flex;
+    padding: 10px 50px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* Číslovanie zoznamu registrovaných hráčov */
+.result-players-list li::before {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    counter-increment: section; 
+    content: "Hráč č."counter(section) ;
+}
+
+/* obrázok vlajky pre registrovnú položku */
+.result-players-list img {
+    border-radius: 15px;
+    width: 50px;
+    height: 50px;
+    margin-left: 100px;
+}
+
+/* Informácie o hráčovi */
+.player-info {
+    margin-left: 30px;
+}
+
+
+
+
+
 /* classa pre skrytie leagueHeading - názov ligy */
 .hide {
     display: none;

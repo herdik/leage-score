@@ -167,9 +167,13 @@ document.querySelector(".createLeague-container button").addEventListener("click
     // vytvorenie poľa hráčov (meno a priezvisko) z už zaregistrovaných hráčov
     let players = []
     registeredPlayersArray.forEach((onePlayer) => {
-        players.push(onePlayer.firstName + " " + onePlayer.secondName)
+        players.push({
+            player: onePlayer.firstName + " " + onePlayer.secondName,
+            playerId: onePlayer.id,
+        })
         leagueTable.push({
             playerName: onePlayer.firstName + " " + onePlayer.secondName,
+            playerId: onePlayer.id, 
             playedMatches: 0, 
             wins: 0, 
             losses: 0, 
