@@ -140,10 +140,14 @@ document.querySelector(".leagueHeading h1").addEventListener("click", () => {
 // Zavolanie funkcie kde sú aktuálny ligové zápasy, v prípade ak neexistujú, tak sa vytvorí prázdne pole
 let leagueMatches = getLeagueMatches()
 
+// Zavolanie funkcie kde je ligová tabuľka so všetkými hráčmi a výsledkami, v prípade ak neexistujú, tak sa vytvorí prázdne pole
+let leagueTable = getLeagueTable()
+
 // Tlačítko pre vytvorenie ligy a jeho následné skrytie
 document.querySelector(".createLeague-container button").addEventListener("click", () => {
 
     leagueMatches = []
+    leagueTable = []
 
     document.querySelector(".createLeague-container").classList.add("hide")
 
@@ -161,7 +165,18 @@ document.querySelector(".createLeague-container button").addEventListener("click
     let players = []
     registeredPlayersArray.forEach((onePlayer) => {
         players.push(onePlayer.firstName + " " + onePlayer.secondName)
+        leagueTable.push({
+            playerName: onePlayer.firstName + " " + onePlayer.secondName,
+            playedMatches: 0, 
+            wins: 0, 
+            losses: 0, 
+            difference: 0,
+            points: 0
+        })
     });
+
+    // zavolanie funckie uloženie všetkých výsledkov ligových zápasov do localStorage - leagueTable
+    saveLeagueTable(leagueTable)
     
     // vytvorenie ligových zápasov funckia
     // pole z registrovanými hráčmi (meno a priezvisko, checkbox pre odvety)

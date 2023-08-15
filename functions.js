@@ -162,6 +162,25 @@ let saveLeagueMatches = (allLeagueMatches) => {
     localStorage.setItem("league", JSON.stringify(allLeagueMatches))
 }
 
+// Zavolanie funkcie kde je ligová tabuľka so všetkými hráčmi a výsledkami, v prípade ak neexistujú, tak sa vytvorí prázdne pole
+
+let getLeagueTable = () => {
+    let leagueTableToParset = localStorage.getItem("table")
+
+    if (leagueTableToParset !== null) {
+        return JSON.parse(leagueTableToParset)
+    } else {
+        return []
+    }
+}
+
+// uloženie všetkých výsledkov ligových zápasov do localStorage - leagueTable
+
+let saveLeagueTable = (allLeagueTable) => {
+    
+    localStorage.setItem("table", JSON.stringify(allLeagueTable))
+}
+
 
 
 // vytvorenie ligových zápasov funkcia
