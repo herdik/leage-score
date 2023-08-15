@@ -462,7 +462,6 @@ header img {
     border: 5px solid rgba(0, 0, 0, 0.608);
     border-radius: 20px;
     box-shadow: 0 0 10px 10px #888888;
-    padding: 15px;
 }
 
 /* Tabuľka Hlavý nadpis Heading */
@@ -493,6 +492,23 @@ header img {
 }
 .result-container .right-icon.active-right {
     transform: rotate(45deg);
+}
+
+/* skrytie a odkrytie results-table */
+.hide-table-results {
+    max-height: 0;
+    overflow-y: hidden;
+    opacity: 0;
+    transition: max-height .8s ease-out, opacity 1.2s linear;
+}
+
+.show-table-results {
+    width: 100%;
+    max-height: 800px;
+    overflow-y: auto;
+    transition: max-height 1s ease-in, opacity 1s linear;
+    opacity: 1; 
+    padding: 15px;
 }
 
 /* Tabuľka výsledkov */

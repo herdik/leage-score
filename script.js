@@ -207,6 +207,18 @@ document.querySelector(".createLeague-container button").addEventListener("click
   
 })
 
+
+// Skrytie a odokrytie tabuľky výsledkov
+document.querySelector(".result-container h1").addEventListener("click", () => {
+    document.querySelector(".result-container .left-icon").classList.toggle("active-left")
+    document.querySelector(".result-container .right-icon").classList.toggle("active-right")
+    if (leagueTable.length > 0){
+        document.querySelector(".hide-table-results").classList.toggle("show-table-results")
+    }
+    
+
+})
+
 // Skrytie tlačítka "Vytvoriť ligu" pri vytvorení ligy + skrytie formulára s nastaveniami o vytvorení ligy
 
 // // if (document.querySelector(".league-matches").children.length){
