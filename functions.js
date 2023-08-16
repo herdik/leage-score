@@ -296,8 +296,6 @@ let generateGeneralMatchDiv = (everyMatch) => {
             // Funckia pre zmenu stavu aktívneho zápasu
             modifyModal(leagueMatches[leagueIndexes2[0]][leagueIndexes2[1]])
             
-            // generalMatchDiv.classList.remove("activeLeagueMatch")
-            // button.textContent = "Zapnúť"
         } else if (button.textContent === "Zapnúť") {
             generalMatchDiv.classList.add("activeLeagueMatch")
             button.textContent = "Upraviť"
@@ -311,6 +309,11 @@ let generateGeneralMatchDiv = (everyMatch) => {
         generalMatchDiv.classList.add("activeLeagueMatch")
         button.textContent = "Upraviť"
     } 
+    if (everyMatch.matchFinished){
+        generalMatchDiv.classList.remove("activeLeagueMatch")
+        generalMatchDiv.classList.add("fisnishedLeagueMatch")
+        button.textContent = "Ukončiť"
+    }
 
     spanpl1.textContent = everyMatch.player1
     labelpl1.textContent = everyMatch.score1
@@ -368,6 +371,10 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
     // currentEditedMatch je premenná kde je preuložený selectedMatch, teda aktuálny vybraný zápas z leagueMatches
     currentEditedMatch.score1 = playerScore1
     currentEditedMatch.score2 = playerScore2
+    if (checkbox) {
+        currentEditedMatch.matchFinished = checkbox
+        currentEditedMatch.matchStart = false
+    }
 
     // uloženie zmien v league LocalStorage
     saveLeagueMatches(leagueMatches)

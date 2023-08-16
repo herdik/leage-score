@@ -431,6 +431,13 @@ header img {
     background-color: rgb(7, 176, 120);
     color: #fff;
 }
+/* Ukončený ligový zápas */
+.fisnishedLeagueMatch {
+    background-color: rgb(30, 38, 35);
+    color: #fff;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    box-shadow: 0 0 3px 5px #888888;
+}
 
 /* Players in one match line */
 .general-match span {
@@ -439,6 +446,7 @@ header img {
 
 /* Score in one match line */
 .general-match label {
+    width: 54px;
     padding: 10px;
     border: 5px solid rgba(0, 0, 0, 0.608);
     border-radius: 15px;
@@ -453,6 +461,10 @@ header img {
     border-radius: 20px;
     margin: 0 10px;
     padding: 5px 10px;
+}
+/* Button in one match line Ukončený ligový zápas */
+.fisnishedLeagueMatch button {
+    visibility: hidden;
 }
 
 
