@@ -352,8 +352,41 @@ let getIndexSelectedMatch = (allMatches, matchID) => {
     
 }
 
-// Funckia pre zmenu stavu aktívneho zápasu
+// Vytvorenie globálnej premennej pre preukladanie aktuálneho vybraného zápasu - selectedMatch
+let currentEditedMatch
+
+// editácia a poslanie hodnôt z modal dialog window a uloženie ich do leagueMatches a zatvorenie modal dialog window
+document.querySelector("#matchForm").addEventListener("submit", (event) => {
+    // vypnutie update/refresh formulára po odoslaní
+    event.preventDefault()
+
+    // po odoslaní formulára záskanie hodnôt z modal window
+    let checkbox = event.target.checkFinish.checked
+    let playerScore1 = event.target.score1.value
+    let playerScore2 = event.target.score2.value
+    
+    // currentEditedMatch je premenná kde je preuložený selectedMatch, teda aktuálny vybraný zápas z leagueMatches
+    currentEditedMatch.score1 = playerScore1
+    currentEditedMatch.score2 = playerScore2
+
+    // uloženie zmien v league LocalStorage
+    saveLeagueMatches(leagueMatches)
+    // Vykreslenie zmien na stránku z league LocalStorage
+    printLeagueMatches()
+
+    const modalWindow = document.querySelector("#modal")
+    modalWindow.close()
+
+    // defaultné hodnoty
+    event.target.checkFinish.checked = false
+
+})
+
+// Funckia pre zobrazenie vybraného zápasu aktívneho zápasu zavolaním modal dialog window, kde sa načítajú hodnoty zo selectedMatch
 let modifyModal = (selectedMatch) => {
+    // uloženie do globálnej premennej aktuálny selectedMatch
+    currentEditedMatch = selectedMatch
+
     let firstPlayer = selectedMatch.player1
     let firstPlayerScore = selectedMatch.score1
     let secondPlayer = selectedMatch.player2
@@ -367,27 +400,6 @@ let modifyModal = (selectedMatch) => {
     
     modalWindow.showModal()
 
-    document.querySelector("#matchForm").addEventListener("submit", (event) => {
-        // vypnutie update/refresh formulára po odoslaní
-        event.preventDefault()
-
-        let checkbox = event.target.checkFinish.checked
-        let playerScore1 = event.target.score1.value
-        let playerScore2 = event.target.score2.value
-        console.log(checkbox)
-        console.log(playerScore1)
-        console.log(playerScore2)
-        selectedMatch.score1 = playerScore1
-        selectedMatch.score2 = playerScore2
-        saveLeagueMatches(leagueMatches)
-        printLeagueMatches()
-
-        modalWindow.close()
-
-        // defaultné hodnoty
-        event.target.checkFinish.checked = false
-
-    })
 }
 
 
