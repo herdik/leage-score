@@ -205,6 +205,7 @@ let create_league = function(checkedTeams, revengeMatch) {
             one_round.push({
                 matchStart: false,
                 matchFinished: false,
+                matchRegistered: false,
                 matchId: uuidv4(),
                 player1: checkedTeams[i].player,
                 player1Id: checkedTeams[i].playerId, 
@@ -217,6 +218,7 @@ let create_league = function(checkedTeams, revengeMatch) {
                 revengeMatches.push({
                     matchStart: false,
                     matchFinished: false,
+                    matchRegistered: false,
                     matchId: uuidv4(),
                     player1: checkedTeams[(checkedTeams.length -1) - i].player,
                     player1Id: checkedTeams[(checkedTeams.length -1) - i].playerId,
@@ -313,6 +315,7 @@ let generateGeneralMatchDiv = (everyMatch) => {
         generalMatchDiv.classList.remove("activeLeagueMatch")
         generalMatchDiv.classList.add("fisnishedLeagueMatch")
         button.textContent = "Ukončiť"
+        generateHtmlPrintLeagueTable(leagueTable, leagueMatches)
     }
 
     spanpl1.textContent = everyMatch.player1
@@ -439,7 +442,62 @@ let printLeagueMatches = () => {
 }
 
 // funkcia pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
-let generateHtmlPrintLeagueTable = (tableInfo) => {
+let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
+
+    if (leagueInfo.length > 0){
+        leagueInfo.forEach((oneRound) => {
+            oneRound.find(function(oneMatch){
+                if (oneMatch.matchFinished === true && oneMatch.matchRegistered != true){
+                    let played = 1
+                    let points = 3
+                    let findedPlayer1 = oneMatch.player1Id
+                    let findedScore1 = oneMatch.score1
+                    let findedPlayer2 = oneMatch.player2Id
+                    let findedScore2 = oneMatch.score2
+                    // console.log(oneMatch)
+                    // console.log(findedPlayer1)
+                    // console.log(findedPlayer2)
+                    // console.log(findedScore1)
+                    // console.log(findedScore2)
+                    tableInfo.find(function(onePlayer){
+                        if(onePlayer.playerId === findedPlayer1){
+                            onePlayer.playedMatches += played
+                            onePlayer.wins += Number(findedScore1)
+                            console.log(onePlayer.wins)
+                            onePlayer.losses += Number(findedScore2)
+                            console.log(onePlayer.losses)
+                            console.log(onePlayer.difference)
+                            onePlayer.difference = onePlayer.wins - onePlayer.losses
+                            console.log(onePlayer.difference)
+                            console.log("---------")
+                            if (Number(findedScore1) > Number(findedScore2)){
+                                onePlayer.points += points
+                            }
+                            // console.log(onePlayer)
+                        }
+                        if(onePlayer.playerId === findedPlayer2){
+                            onePlayer.playedMatches += played
+                            onePlayer.wins += Number(findedScore2)
+                            console.log(onePlayer.wins)
+                            onePlayer.losses += Number(findedScore1)
+                            console.log(onePlayer.losses)
+                            console.log(onePlayer.difference)
+                            onePlayer.difference = onePlayer.wins - onePlayer.losses
+                            console.log(onePlayer.difference)
+                            if (Number(findedScore2) > Number(findedScore1)){
+                                onePlayer.points += points
+                            }
+                            // console.log(onePlayer)
+                        }
+                    })
+                    oneMatch.matchRegistered = true
+                    saveLeagueMatches(leagueMatches)
+                    saveLeagueTable(leagueTable)
+                }
+            })
+
+        })
+    }   
 
     if (localStorage.getItem("table") !== null){
         const tableDiv = document.querySelector(".results-table tbody")
@@ -458,8 +516,5 @@ let generateHtmlPrintLeagueTable = (tableInfo) => {
         `
         tableDiv.append(tbodyTr)
     })
-    }
-    
-
-    
+    }  
 }
