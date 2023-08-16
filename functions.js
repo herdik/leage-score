@@ -454,40 +454,29 @@ let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
                     let findedScore1 = oneMatch.score1
                     let findedPlayer2 = oneMatch.player2Id
                     let findedScore2 = oneMatch.score2
-                    // console.log(oneMatch)
-                    // console.log(findedPlayer1)
-                    // console.log(findedPlayer2)
-                    // console.log(findedScore1)
-                    // console.log(findedScore2)
+                    
                     tableInfo.find(function(onePlayer){
                         if(onePlayer.playerId === findedPlayer1){
                             onePlayer.playedMatches += played
                             onePlayer.wins += Number(findedScore1)
-                            console.log(onePlayer.wins)
                             onePlayer.losses += Number(findedScore2)
-                            console.log(onePlayer.losses)
-                            console.log(onePlayer.difference)
                             onePlayer.difference = onePlayer.wins - onePlayer.losses
-                            console.log(onePlayer.difference)
-                            console.log("---------")
+                
                             if (Number(findedScore1) > Number(findedScore2)){
                                 onePlayer.points += points
                             }
-                            // console.log(onePlayer)
+                            
                         }
                         if(onePlayer.playerId === findedPlayer2){
                             onePlayer.playedMatches += played
                             onePlayer.wins += Number(findedScore2)
-                            console.log(onePlayer.wins)
                             onePlayer.losses += Number(findedScore1)
-                            console.log(onePlayer.losses)
-                            console.log(onePlayer.difference)
                             onePlayer.difference = onePlayer.wins - onePlayer.losses
-                            console.log(onePlayer.difference)
+                            
                             if (Number(findedScore2) > Number(findedScore1)){
                                 onePlayer.points += points
                             }
-                            // console.log(onePlayer)
+                            
                         }
                     })
                     oneMatch.matchRegistered = true
@@ -497,7 +486,9 @@ let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
             })
 
         })
-    }   
+    }  
+    // Usporiadanie tabuľky podľa nastavených kritérií - 1.Body,  2.rozdiel skóre 
+    sortsTable(leagueTable)
 
     if (localStorage.getItem("table") !== null){
         const tableDiv = document.querySelector(".results-table tbody")
@@ -517,4 +508,20 @@ let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
         tableDiv.append(tbodyTr)
     })
     }  
+}
+
+// Usporiadanie tabuľky podľa nastavených kritérií - 1.Body,  2.rozdiel skóre
+let sortsTable = function(myTable){
+    myTable.sort(function(a, b){
+        if(b.points < a.points){
+            return -1
+        } else if (a.points < b.points){
+            return 1
+        } else if (a.points === b.points)
+            if(b.difference < a.difference){
+                return -1
+            } else if (a.difference < b.difference){
+                return 1
+            }
+    })
 }
