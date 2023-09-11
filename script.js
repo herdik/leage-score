@@ -2,7 +2,7 @@
 repeatingText()
 
 // Array pre záskanie odvety a match setting(single, doubles teams)
-let getMainLeagueSettings = []
+let MainLeagueSettings = getLeagueSystemSettings()
 
 
 // System league settings
@@ -12,20 +12,37 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
     // Skrytie formulára po odoslaní nastavení
     document.querySelector(".system-container").classList.add("hide")
     
-    // Variable odoslané do getMainLeagueSettings()
+    // Variable odoslané do MainLeagueSettings()
     let checkbox = event.target.checkbox.checked
     let settingsMatches = event.target.matchSettings.value
 
     // Array pre záskanie odvety a match setting(single, doubles teams) a jeho naplnenie
-    getMainLeagueSettings.push(checkbox)
-    getMainLeagueSettings.push(settingsMatches)
-
+    MainLeagueSettings.push(checkbox)
+    MainLeagueSettings.push(settingsMatches)
+    
+    // Uloženie League System Settings do Local Storage
+    saveLeagueSystemSettings(MainLeagueSettings)
     // Default nastavenia pre checkbox a options in match-settings
     event.target.checkbox.checked = false
     event.target.matchSettings.selectedIndex = 0
     
-    // // zavolanie Funckie pre získanie základných nastavní pre vytvorenie ligy
-    // getMainLeagueSettings(checkbox, settingsMatches)
+    // Úprava registračného formulára pri nastaveniach
+    if(settingsMatches === "doubles"){
+        document.querySelector("#registration-form").innerHTML = `
+            <input type="text" placeholder="Meno 1" name="firstName">
+            <input type="text" placeholder="Priezvisko 1" name="secondName"><br>
+            <input type="text" placeholder="Meno 2" name="firstName2">
+            <input type="text" placeholder="Priezvisko 2" name="secondName2"><br>
+            <input type="text" placeholder="Klub" name="playersClub">
+            <input class="submit" type="submit" value="Zapísať" name="submitForm"><br>
+            <!-- výber krajiny z options -->
+                <select id="countries" name="countryOption">
+                    <option value="svk">🇸🇰&emsp; Slovakia</option>
+                    <option value="cz">🇨🇿&emsp; Czech republic</option>
+                    <option value="pl">🇵🇱&emsp; Poland</option>
+                </select>
+            `
+    }
     
     
 })
@@ -40,12 +57,20 @@ let registeredPlayersArray = getRegisteredPlayers()
 document.querySelector("#registration-form").addEventListener("submit", (event) => {
     // vypnutie update/refresh formulára po odoslaní
     event.preventDefault()
-
+    let playerFirstName = event.target.firstName.value
+    let playerSecondName = event.target.secondName.value
+    if(MainLeagueSettings[1] === "doubles"){
+        playerFirstName = event.target.firstName.value + " " + event.target.secondName.value
+        playerSecondName = event.target.firstName2.value + " " + event.target.secondName2.value
+        // vynulovanie všetkých values po odoslaní formulára
+        event.target.firstName2.value = ""
+        event.target.secondName2.value = ""
+    }
     // pridanie objektu do pola registrovaných hráčov
     registeredPlayersArray.push({
         id: uuidv4(),
-        firstName: event.target.firstName.value,
-        secondName: event.target.secondName.value,
+        firstName: playerFirstName,
+        secondName: playerSecondName,
         playersClub: event.target.playersClub.value,
         countryOption: event.target.countryOption.value 
     })
@@ -55,7 +80,7 @@ document.querySelector("#registration-form").addEventListener("submit", (event) 
 
     
     // generate HTML Structure for class="second-container hide" and ol class="registered-players-list"
-    let oneHTML = generateHTMLstructure(registeredPlayersArray[registeredPlayersArray.length - 1])
+    let oneHTML = generateHTMLstructure(registeredPlayersArray[registeredPlayersArray.length - 1], MainLeagueSettings[1])
     document.querySelector(".registered-players-list").appendChild(oneHTML)
     
 
@@ -89,6 +114,9 @@ document.querySelector(".first-container h1").addEventListener("click", () => {
         transition: max-height .5s ease-in, opacity .5s linear;
         opacity: 1;
         `
+        if(MainLeagueSettings[1] === "doubles"){
+            document.querySelector("#registration-form").style.maxHeight = "550px";
+        }
         changeRegForm = false
     } else {
         document.querySelector("#registration-form").style.cssText = `
@@ -152,27 +180,36 @@ document.querySelector(".createLeague-container button").addEventListener("click
     leagueMatches = []
     leagueTable = []
 
+    // Player Info
+    let playerInfo
+
     document.querySelector(".createLeague-container").classList.add("hide")
 
     // checkbox a match settings
     // checkbox
-    if (getMainLeagueSettings[0] === undefined) {
-        getMainLeagueSettings[0] = false
+    if (MainLeagueSettings[0] === undefined) {
+        MainLeagueSettings[0] = false
     }
-     // match settings
-    if (getMainLeagueSettings[1] === undefined) {
-        getMainLeagueSettings[1] = "single"
+     // match settings undefined
+    if (MainLeagueSettings[1] === undefined) {
+        MainLeagueSettings[1] = "single"
     }
 
     // vytvorenie poľa hráčov (meno a priezvisko) z už zaregistrovaných hráčov
     let players = []
     registeredPlayersArray.forEach((onePlayer) => {
+        // match settings defined
+        if (MainLeagueSettings[1] === "single") {
+            playerInfo = onePlayer.firstName + " " + onePlayer.secondName
+        } else if (MainLeagueSettings[1] === "doubles"){
+            playerInfo = onePlayer.firstName + " - " + onePlayer.secondName
+        }
         players.push({
-            player: onePlayer.firstName + " " + onePlayer.secondName,
+            player: playerInfo,
             playerId: onePlayer.id,
         })
         leagueTable.push({
-            playerName: onePlayer.firstName + " " + onePlayer.secondName,
+            playerName: playerInfo,
             playerId: onePlayer.id, 
             playedMatches: 0, 
             wins: 0, 
@@ -181,17 +218,23 @@ document.querySelector(".createLeague-container button").addEventListener("click
             points: 0
         })
     });
+    // Pridanie voľno do poľa pri nepárnom počte hráčov, teda aby každý hráč mal zápas v danom kole
+    if (players.length % 2 != 0){
+        players.push({
+            player: "Voľno",
+            playerId: 0,
+        })
+    }
 
     // zavolanie funckie uloženie všetkých výsledkov ligových zápasov do localStorage - leagueTable
     saveLeagueTable(leagueTable)
     
     // vytvorenie ligových zápasov funckia
     // pole z registrovanými hráčmi (meno a priezvisko, checkbox pre odvety)
-    create_league(players, getMainLeagueSettings[0])
-    // console.log(create_league(players, getMainLeagueSettings[0]))
+    create_league(players, MainLeagueSettings[0])
     
     saveLeagueMatches(leagueMatches)
-    // localStorage.setItem("league", JSON.stringify(create_league(players, getMainLeagueSettings[0])))
+    
 
     // zavolanie funkcie pre vykreslenie ligových zápasov do div .league-matches po otvorení prehliadača/stránky
     printLeagueMatches()
@@ -201,9 +244,6 @@ document.querySelector(".createLeague-container button").addEventListener("click
 
     // zavolanie funkcie pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
     // generateHtmlPrintLeagueTable()
-
-    // default settings pre getMainLeagueSettings
-    getMainLeagueSettings = []
   
 })
 

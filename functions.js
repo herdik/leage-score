@@ -32,11 +32,26 @@ document.querySelector("#leagueName-form").addEventListener("submit", (event) =>
     
 })
 
+// Save league system settings to Local Storage
+let saveLeagueSystemSettings = (setLeagueSystem) => {
+    localStorage.setItem("leagueSystem", JSON.stringify(setLeagueSystem))
+}
+// Get league system settings from Local Storage
+let getLeagueSystemSettings = () => {
+    let leagueSystemToParset = localStorage.getItem("leagueSystem")
+
+    if (leagueSystemToParset !== null){
+        return JSON.parse(leagueSystemToParset)
+    } else {
+        return []
+    }
+}
+
 // Save league Name to Local Storage
 let saveLeagueNameLocalStorage = (nameOfLeague) => {
     localStorage.setItem("headingLeague", JSON.stringify(nameOfLeague))
 }
-
+// Get league Name from Local Storage
 let getLeagueName = () => {
     let leagueToParset = localStorage.getItem("headingLeague")
 
@@ -71,8 +86,7 @@ let saveRegisteredPlayers = (regPlayers) => {
 
 // Funkcia na vytvorenie HTML štruktúry pre Zoznam Hráčov
 
-let generateHTMLstructure = (newRegPlayer) => {
-    
+let generateHTMLstructure = (newRegPlayer, playingSystem) => {
     if (registeredPlayersArray.length > 0) {
         // Ak existuje aspoň jeden hráč odober display none
         document.querySelector(".second-container").classList.remove("hide")
@@ -81,14 +95,19 @@ let generateHTMLstructure = (newRegPlayer) => {
 
     // vytvorenie delete button pre vymazanie hráča z second-container - "Zoznam hráčov"
     let removeBtnPlayer = document.createElement("button")
+    let playingname = newRegPlayer.firstName + " " + newRegPlayer.secondName
+    if(playingSystem === "doubles"){
+        playingname = newRegPlayer.firstName + " - " + newRegPlayer.secondName
+    }
     removeBtnPlayer.classList.add("removeBtn")
     removeBtnPlayer.innerHTML = "Vymazať<br>hráča"
 
     let newLi = document.createElement("li")
+
     newLi.innerHTML = `
             <img src="img/slovakia-flag.png" alt="slovakia-flag">
             <div class="player-informations">
-                <h3>${newRegPlayer.firstName} ${newRegPlayer.secondName}</h3>
+                <h3>${playingname}</h3>
                 <p>${newRegPlayer.playersClub}</p>
             </div>`
     newLi.appendChild(removeBtnPlayer)
@@ -133,8 +152,8 @@ let printRegPlayers = () => {
         let parsetPlayers = getRegisteredPlayers()
         
         parsetPlayers.forEach((onePlayer) => {
-
-        let oneHTML = generateHTMLstructure(onePlayer)
+        
+        let oneHTML = generateHTMLstructure(onePlayer, MainLeagueSettings[1])
 
         document.querySelector(".registered-players-list").appendChild(oneHTML)
 
@@ -185,12 +204,7 @@ let saveLeagueTable = (allLeagueTable) => {
 
 // vytvorenie ligových zápasov funkcia
 let create_league = function(checkedTeams, revengeMatch) {
-
-    // Pridanie voľno do poľa pri nepárnom počte hráčov, teda aby každý hráč mal zápas v danom kole
-    if (checkedTeams.length % 2 != 0){
-        checkedTeams.push("Voľno")
-    }
-
+    
     // let leagueRounds = []
     let one_round = []
     let leagueRevengeRounds = []
@@ -210,10 +224,13 @@ let create_league = function(checkedTeams, revengeMatch) {
                 player1: checkedTeams[i].player,
                 player1Id: checkedTeams[i].playerId, 
                 score1: 0,
-                player2 :checkedTeams[(checkedTeams.length -1) - i].player,
+                player2: checkedTeams[(checkedTeams.length -1) - i].player,
                 player2Id: checkedTeams[(checkedTeams.length -1) - i].playerId,
                 score2: 0,
             })
+            if(one_round[i].player1 === "Voľno" || one_round[i].player2 === "Voľno"){
+                one_round[i].matchFinished = true
+                one_round[i].matchStart = true}
             if (returnMatches) {
                 revengeMatches.push({
                     matchStart: false,
@@ -223,13 +240,15 @@ let create_league = function(checkedTeams, revengeMatch) {
                     player1: checkedTeams[(checkedTeams.length -1) - i].player,
                     player1Id: checkedTeams[(checkedTeams.length -1) - i].playerId,
                     score1: 0,
-                    player2 : checkedTeams[i].player,
+                    player2: checkedTeams[i].player,
                     player2Id: checkedTeams[i].playerId, 
                     score2: 0,
                 })
+                if(returnMatches[i].player1 === "Voľno" || returnMatches[i].player2 === "Voľno") {
+                    returnMatches[i].matchFinished = true
+                    returnMatches[i].matchStart = true}
             }
-            // console.log(checkedTeams[i])
-            // console.log(checkedTeams[(checkedTeams.length -1) - i])
+            
         }
         leagueMatches.push(one_round)
         one_round = []
@@ -431,7 +450,6 @@ let printLeagueMatches = () => {
             document.querySelector(".league-matches").appendChild(divLeagueRound)
         
             oneRound.forEach((oneMatch) => {
-        
                 let divGeneralMatch = generateGeneralMatchDiv(oneMatch)
                 divLeagueRound.appendChild(divGeneralMatch)
         
@@ -454,9 +472,10 @@ let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
                     let findedScore1 = oneMatch.score1
                     let findedPlayer2 = oneMatch.player2Id
                     let findedScore2 = oneMatch.score2
+                    let activeMatch = oneMatch.matchStart
                     
                     tableInfo.find(function(onePlayer){
-                        if(onePlayer.playerId === findedPlayer1){
+                        if(onePlayer.playerId === findedPlayer1 && activeMatch === false){
                             onePlayer.playedMatches += played
                             onePlayer.wins += Number(findedScore1)
                             onePlayer.losses += Number(findedScore2)
@@ -467,7 +486,7 @@ let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
                             }
                             
                         }
-                        if(onePlayer.playerId === findedPlayer2){
+                        if(onePlayer.playerId === findedPlayer2 && activeMatch === false){
                             onePlayer.playedMatches += played
                             onePlayer.wins += Number(findedScore2)
                             onePlayer.losses += Number(findedScore1)
