@@ -232,8 +232,19 @@ header img {
     font-size: 14px;
     padding-left: 10px;
     padding-right: 10px;
-} 
+}
 
+/* button pre zmenu družstva */
+.changeBtn {
+    display: block;
+    padding: 8px;
+    border-radius: 20px;
+    font-weight: 700;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 10px;
+}
 
 /* Druhý container */
 .second-container {

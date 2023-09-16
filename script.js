@@ -4,6 +4,12 @@ repeatingText()
 // Array pre záskanie odvety a match setting(single, doubles teams)
 let MainLeagueSettings = getLeagueSystemSettings()
 
+// Zavolanie funkcie kde sú aktuálny registrovaný hráči, v prípade že hráča nemám tak vytvorí prázdne pole
+let registeredPlayersArray = getRegisteredPlayers()
+
+// Zavolanie funkcie kde sú aktuálny registrované teamy, v prípade že hráča nemám tak vytvorí prázdne pole
+let registeredTeamsArray = getRegisteredTeams()
+
 
 // System league settings
 document.querySelector("#league-settings").addEventListener("submit", (event) => {
@@ -26,7 +32,7 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
     event.target.checkbox.checked = false
     event.target.matchSettings.selectedIndex = 0
     
-    // Úprava registračného formulára pri nastaveniach
+    // Úprava registračného formulára pri nastaveniach pre dvojice a teamy
     if(settingsMatches === "doubles"){
         document.querySelector("#registration-form").innerHTML = `
             <input type="text" placeholder="Meno 1" name="firstName">
@@ -42,15 +48,52 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
                     <option value="pl">🇵🇱&emsp; Poland</option>
                 </select>
             `
+    } else if (settingsMatches === "teams"){
+        let changeButton = document.createElement("button")
+        changeButton.classList.add("changeBtn")
+        changeButton.textContent = "Registrovať družstvo"
+        document.querySelector("#registration-form").innerHTML = `
+            <input type="text" placeholder="Meno" name="firstName">
+            <input type="text" placeholder="Priezvisko" name="secondName"><br>
+            <input type="text" placeholder="Klub" name="playersClub">
+            <input class="submit" type="submit" value="Zapísať" name="submitForm"><br>
+
+            <!-- výber krajiny z options -->
+                <select id="countries" name="countryOption">
+                    <option value="svk">🇸🇰&emsp; Slovakia</option>
+                    <option value="cz">🇨🇿&emsp; Czech republic</option>
+                    <option value="pl">🇵🇱&emsp; Poland</option>
+                </select>
+            `
+        document.querySelector(".first-container").appendChild(changeButton)
+        // Vymazanie placeholdera pre club po kliknutí na tlačítko Zmena družstva
+        document.querySelector(".changeBtn").addEventListener("click", function(event){  
+            // pridanie objektu hráča do pola registrovaných teamov
+            let playersArray = []
+
+            registeredPlayersArray.forEach((onePlayer) => {
+                playersArray.push(onePlayer)
+            })
+
+            registeredTeamsArray.push({
+                id: uuidv4(),
+                teamPlayers: playersArray,
+                teamName: registeredPlayersArray[0].playersClub
+            })
+
+            saveRegisteredTeams(registeredTeamsArray)
+
+            // generate HTML Structure for class="second-container hide" and ol class="registered-players-list"
+            let oneHTML = generateHTMLstructure(registeredTeamsArray[registeredTeamsArray.length - 1], MainLeagueSettings[1])
+            document.querySelector(".registered-players-list").appendChild(oneHTML)
+
+            document.querySelector("#registration-form").children.playersClub.value = "" 
+            registeredPlayersArray = []
+            saveRegisteredPlayers(registeredPlayersArray)
+        })
+        document.querySelector(".changeBtn").classList.add("hide")
     }
-    
-    
 })
-
-
-// Zavolanie funkcie kde sú aktuálny registrovaný hráči, v prípade že hráča nemám tak vytvorí prázdne pole
-let registeredPlayersArray = getRegisteredPlayers()
-
 
 
 // Zachytenie nového registrovaného hráča a uloženie ho do localStorage 
@@ -59,6 +102,8 @@ document.querySelector("#registration-form").addEventListener("submit", (event) 
     event.preventDefault()
     let playerFirstName = event.target.firstName.value
     let playerSecondName = event.target.secondName.value
+    let playersClubName = event.target.playersClub.value
+
     if(MainLeagueSettings[1] === "doubles"){
         playerFirstName = event.target.firstName.value + " " + event.target.secondName.value
         playerSecondName = event.target.firstName2.value + " " + event.target.secondName2.value
@@ -66,35 +111,40 @@ document.querySelector("#registration-form").addEventListener("submit", (event) 
         event.target.firstName2.value = ""
         event.target.secondName2.value = ""
     }
-    // pridanie objektu do pola registrovaných hráčov
-    registeredPlayersArray.push({
+    // pridanie objektu hráča do pola registrovaných hráčov
+    let currentPlayer = {
         id: uuidv4(),
         firstName: playerFirstName,
         secondName: playerSecondName,
-        playersClub: event.target.playersClub.value,
+        playersClub: playersClubName,
         countryOption: event.target.countryOption.value 
-    })
+    }
+    registeredPlayersArray.push(currentPlayer)
 
     // uloženie pola registeredPlayersArray a k nemu príslušného KEY do localStorage
     saveRegisteredPlayers(registeredPlayersArray)
 
+    if (MainLeagueSettings[1] !== "teams"){
+        event.target.playersClub.value = ""
+        // generate HTML Structure for class="second-container hide" and ol class="registered-players-list"
+        let oneHTML = generateHTMLstructure(registeredPlayersArray[registeredPlayersArray.length - 1], MainLeagueSettings[1])
+        document.querySelector(".registered-players-list").appendChild(oneHTML)
+    }
     
-    // generate HTML Structure for class="second-container hide" and ol class="registered-players-list"
-    let oneHTML = generateHTMLstructure(registeredPlayersArray[registeredPlayersArray.length - 1], MainLeagueSettings[1])
-    document.querySelector(".registered-players-list").appendChild(oneHTML)
-    
-
     // vynulovanie všetkých values po odoslaní formulára
     event.target.firstName.value = ""
     event.target.secondName.value = ""
-    event.target.playersClub.value = ""
+    
+        
     // nastavenie defaultne prvej option v Otions MENU(select id="countries" )
     event.target.countryOption.selectedIndex = 0
     
 })
 
 // called function pre vykreslenie hráčov do zoznamu po otvorení prehliadača/stránky
-printRegPlayers()
+if(localStorage.getItem("registeredTeams") !== null || localStorage.getItem("registeredPlayers") !== null){
+    printRegPlayers(MainLeagueSettings[1])
+}
 
 
 
@@ -129,7 +179,10 @@ document.querySelector(".first-container h1").addEventListener("click", () => {
     }
     document.querySelector(".first-container .left-icon").classList.toggle("active-left")
     document.querySelector(".first-container .right-icon").classList.toggle("active-right")
-
+    if (MainLeagueSettings[1] === "teams"){
+        document.querySelector(".changeBtn").classList.toggle("hide")
+    }
+    
 })
 
 

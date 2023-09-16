@@ -84,38 +84,64 @@ let saveRegisteredPlayers = (regPlayers) => {
 }
 
 
+// Prístup k všetkým registrovaným teamom, ak nie sú teamy vytvorí sa pre nich pole
+
+let getRegisteredTeams = () => {
+    let regTeamsToParset = localStorage.getItem("registeredTeams")
+
+    if (regTeamsToParset !== null) {
+        return JSON.parse(regTeamsToParset)
+    } else {
+        return []
+    }
+}
+
+
+// uloženie registrovaných teamov do localStorage - registeredTeams
+
+let saveRegisteredTeams = (regTeams) => {
+    
+    localStorage.setItem("registeredTeams", JSON.stringify(regTeams))
+}
+
+
 // Funkcia na vytvorenie HTML štruktúry pre Zoznam Hráčov
 
 let generateHTMLstructure = (newRegPlayer, playingSystem) => {
-    if (registeredPlayersArray.length > 0) {
-        // Ak existuje aspoň jeden hráč odober display none
+    let playingName
+    let clubName
+    if (registeredPlayersArray.length > 0 || registeredTeamsArray.length > 0) {
+        // Ak existuje aspoň jeden hráč alebo team odober class hide pre skrytie zoznamu hráčov
         document.querySelector(".second-container").classList.remove("hide")
-
     }
 
     // vytvorenie delete button pre vymazanie hráča z second-container - "Zoznam hráčov"
     let removeBtnPlayer = document.createElement("button")
-    let playingname = newRegPlayer.firstName + " " + newRegPlayer.secondName
+    
+    playingName = playingSystem === "teams"? newRegPlayer.teamName : newRegPlayer.firstName + " " + newRegPlayer.secondName
     if(playingSystem === "doubles"){
-        playingname = newRegPlayer.firstName + " - " + newRegPlayer.secondName
+        playingName = newRegPlayer.firstName + " - " + newRegPlayer.secondName
     }
     removeBtnPlayer.classList.add("removeBtn")
     removeBtnPlayer.innerHTML = "Vymazať<br>hráča"
+
+    clubName = playingSystem === "teams"? "Klub" : newRegPlayer.playersClub
 
     let newLi = document.createElement("li")
 
     newLi.innerHTML = `
             <img src="img/slovakia-flag.png" alt="slovakia-flag">
             <div class="player-informations">
-                <h3>${playingname}</h3>
-                <p>${newRegPlayer.playersClub}</p>
+                <h3>${playingName}</h3>
+                <p>${clubName}</p>
             </div>`
     newLi.appendChild(removeBtnPlayer)
 
     // na každý remove Button je naviazaný addeventlistener
     removeBtnPlayer.addEventListener("click", () => {
-        // called Funkcia pre vymazanie vybraného hráča po kliknutí na tlačítko vymazať
-        removeSelectedPlayer(newRegPlayer.id, registeredPlayersArray)
+        // called Funkcia pre vymazanie vybraného hráča alebo team po kliknutí na tlačítko vymazať 
+        playingSystem === "teams" ? removeSelectedPlayer(newRegPlayer.id, registeredTeamsArray, MainLeagueSettings[1]) : removeSelectedPlayer(newRegPlayer.id, registeredPlayersArray, MainLeagueSettings[1])
+        
     })
 
     return newLi
@@ -123,9 +149,8 @@ let generateHTMLstructure = (newRegPlayer, playingSystem) => {
 
 // Funkcia pre vymazanie vybraného hráča
 
-let removeSelectedPlayer = function(selectPlayerId, regAllPlayers){
-    // registeredPlayersArray = getRegisteredPlayers()
-
+let removeSelectedPlayer = function(selectPlayerId, regAllPlayers, playingSystem){
+    
     let toDeleteIndex = regAllPlayers.findIndex(findedPlayer)
     function findedPlayer(myID) {
         return myID.id === selectPlayerId;
@@ -133,8 +158,8 @@ let removeSelectedPlayer = function(selectPlayerId, regAllPlayers){
     
     if (toDeleteIndex > -1) { 
         regAllPlayers.splice(toDeleteIndex, 1)
-        saveRegisteredPlayers(registeredPlayersArray)
-        printRegPlayers()
+        playingSystem === "teams" ? saveRegisteredTeams(registeredTeamsArray) : saveRegisteredPlayers(registeredPlayersArray)
+        printRegPlayers(MainLeagueSettings[1])
         if (regAllPlayers.length <= 0){
             document.querySelector(".second-container").classList.add("hide")
         }
@@ -143,21 +168,38 @@ let removeSelectedPlayer = function(selectPlayerId, regAllPlayers){
 }
 
 // funkcia pre vykreslenie hráčov do zoznamu po otvorení prehliadača/stránky
-let printRegPlayers = () => {
-    if (localStorage.getItem("registeredPlayers") !== null) {
-        // // Vymazanie vnútra html pre zamedzenie opakovaného vypísania rovnakého hráča
-        document.querySelector(".registered-players-list").innerHTML = ""
+let printRegPlayers = (playingSystem) => {
+    if(playingSystem !== "teams"){
+        if (localStorage.getItem("registeredPlayers") !== null) {
+            // // Vymazanie vnútra html pre zamedzenie opakovaného vypísania rovnakého hráča
+            document.querySelector(".registered-players-list").innerHTML = ""
 
-        // let parsetPlayers = JSON.parse(localStorage.getItem("registeredPlayers"))
-        let parsetPlayers = getRegisteredPlayers()
-        
-        parsetPlayers.forEach((onePlayer) => {
-        
-        let oneHTML = generateHTMLstructure(onePlayer, MainLeagueSettings[1])
+            // let parsetPlayers = JSON.parse(localStorage.getItem("registeredPlayers"))
+            let parsetPlayers = getRegisteredPlayers()
+            
+            parsetPlayers.forEach((onePlayer) => {
+            
+            let oneHTML = generateHTMLstructure(onePlayer, MainLeagueSettings[1])
 
-        document.querySelector(".registered-players-list").appendChild(oneHTML)
+            document.querySelector(".registered-players-list").appendChild(oneHTML)
 
-        });
+            });
+        }
+    }else {
+        if (localStorage.getItem("registeredTeams") !== null) {
+            // // Vymazanie vnútra html pre zamedzenie opakovaného vypísania rovnakého hráča
+            document.querySelector(".registered-players-list").innerHTML = ""
+
+            let parsetPlayers = getRegisteredTeams()
+            
+            parsetPlayers.forEach((onePlayer) => {
+            
+            let oneHTML = generateHTMLstructure(onePlayer, MainLeagueSettings[1])
+
+            document.querySelector(".registered-players-list").appendChild(oneHTML)
+
+            });
+        }
     }
 }
 
