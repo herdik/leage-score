@@ -236,26 +236,24 @@ document.querySelector(".createLeague-container button").addEventListener("click
     // Player Info
     let playerInfo
 
-    document.querySelector(".createLeague-container").classList.add("hide")
-
-    // checkbox a match settings
-    // checkbox
-    if (MainLeagueSettings[0] === undefined) {
-        MainLeagueSettings[0] = false
-    }
-     // match settings undefined
-    if (MainLeagueSettings[1] === undefined) {
-        MainLeagueSettings[1] = "single"
-    }
+    // registrovaná skupina pre forEach pre vytvorenie poľa hráčov
+    let registerdGroup
 
     // vytvorenie poľa hráčov (meno a priezvisko) z už zaregistrovaných hráčov
     let players = []
-    registeredPlayersArray.forEach((onePlayer) => {
+
+    document.querySelector(".createLeague-container").classList.add("hide")
+
+    registerdGroup = MainLeagueSettings[1] !== "teams" ? registeredPlayersArray : registeredTeamsArray
+
+    registerdGroup.forEach((onePlayer) => {
         // match settings defined
         if (MainLeagueSettings[1] === "single") {
             playerInfo = onePlayer.firstName + " " + onePlayer.secondName
         } else if (MainLeagueSettings[1] === "doubles"){
             playerInfo = onePlayer.firstName + " - " + onePlayer.secondName
+        } else {
+            playerInfo = onePlayer.teamName
         }
         players.push({
             player: playerInfo,
@@ -283,8 +281,8 @@ document.querySelector(".createLeague-container button").addEventListener("click
     saveLeagueTable(leagueTable)
     
     // vytvorenie ligových zápasov funckia
-    // pole z registrovanými hráčmi (meno a priezvisko, checkbox pre odvety)
-    create_league(players, MainLeagueSettings[0])
+    // pole z registrovanými hráčmi (meno a priezvisko, checkbox pre odvety, nastavenia [sigle, doubles, teams])
+    createLeague(players, MainLeagueSettings[0], MainLeagueSettings[1])
     
     saveLeagueMatches(leagueMatches)
     

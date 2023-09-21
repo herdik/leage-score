@@ -242,10 +242,32 @@ let saveLeagueTable = (allLeagueTable) => {
     localStorage.setItem("table", JSON.stringify(allLeagueTable))
 }
 
+// vytvorenie podzápasov pre Ligu teamov
+let createUnderTeamLeague = () => {
+    let underMatchesArray = []
+    let playerInMatch
+    for (let round = 0; round < 6; round++) {
+        playerInMatch = round % 2 === 0 ? "Jednotlivec" : "Dvojica"
+        underMatchesArray.push({                
+            matchStart: false,
+            matchFinished: false,
+            matchRegistered: false,
+            matchId: uuidv4(),
+            player1: playerInMatch,
+            player1Id: "Neznáme", 
+            score1: 0,
+            player2: playerInMatch,
+            player2Id: "Neznáme",
+            score2: 0,
+            underMatches: "oneUnderMatch",
+        })
+    }
+    return underMatchesArray
+}
 
 
-// vytvorenie ligových zápasov funkcia
-let create_league = function(checkedTeams, revengeMatch) {
+// vytvorenie ligových podzápasov pre teamy funkcia
+let createLeague = function(checkedTeams, revengeMatch, playingSetting) {
     
     // let leagueRounds = []
     let one_round = []
@@ -254,7 +276,7 @@ let create_league = function(checkedTeams, revengeMatch) {
     let numOfRound = checkedTeams.length - 1
     let matchesInRound = checkedTeams.length / 2 
     let returnMatches = revengeMatch
-    
+
     
     for (let round = 0; round < numOfRound; round++) {
         for (let i = 0; i < matchesInRound; i++) {
@@ -269,10 +291,18 @@ let create_league = function(checkedTeams, revengeMatch) {
                 player2: checkedTeams[(checkedTeams.length -1) - i].player,
                 player2Id: checkedTeams[(checkedTeams.length -1) - i].playerId,
                 score2: 0,
+                underMatches: false,
             })
             if(one_round[i].player1 === "Voľno" || one_round[i].player2 === "Voľno"){
                 one_round[i].matchFinished = true
-                one_round[i].matchStart = true}
+                one_round[i].matchStart = true
+            } else {
+                if(playingSetting === "teams"){
+                    // vytvorenie ligových podzápasov pre teamy funkcia
+                    one_round[i].underMatches = createUnderTeamLeague()
+                }
+            }
+                
             if (returnMatches) {
                 revengeMatches.push({
                     matchStart: false,
@@ -285,10 +315,14 @@ let create_league = function(checkedTeams, revengeMatch) {
                     player2: checkedTeams[i].player,
                     player2Id: checkedTeams[i].playerId, 
                     score2: 0,
+                    underMatches: false,
                 })
-                if(returnMatches[i].player1 === "Voľno" || returnMatches[i].player2 === "Voľno") {
-                    returnMatches[i].matchFinished = true
-                    returnMatches[i].matchStart = true}
+                if(revengeMatches[i].player1 === "Voľno" || revengeMatches[i].player2 === "Voľno") {
+                    revengeMatches[i].matchFinished = true
+                    revengeMatches[i].matchStart = true
+                } else {
+                    // vytvorenie ligových podzápasov pre teamy funkcia
+                    revengeMatches[i].underMatches = createUnderTeamLeague()}
             }
             
         }
@@ -334,7 +368,7 @@ let generateLeagueRoundDiv = (roundNum) =>{
 }
 
 // html štruktúra pre div general-match, teda pre každý zápas, ktorý vložíme pod heading h1 s príšlušným kolom do divu league-matches
-let generateGeneralMatchDiv = (everyMatch) => {
+let generateGeneralMatchDiv = (everyMatch, playingSystem) => {
     const generalMatchDiv = document.createElement("div")
     generalMatchDiv.classList.add("general-match")
     
@@ -353,7 +387,8 @@ let generateGeneralMatchDiv = (everyMatch) => {
 
     // Ako náhle vytvorím nový div tak bude hned naň naviazaný addeventlistener, ktorý má v sebe funkciu na vymazanie
 
-    button.addEventListener("click", function(event){ 
+    button.addEventListener("click", function(event){
+        
         if (button.textContent === "Upraviť"){
             let leagueIndexes2 = getIndexSelectedMatch(leagueMatches, everyMatch.matchId)
             // Funckia pre zmenu stavu aktívneho zápasu
@@ -362,15 +397,35 @@ let generateGeneralMatchDiv = (everyMatch) => {
         } else if (button.textContent === "Zapnúť") {
             generalMatchDiv.classList.add("activeLeagueMatch")
             button.textContent = "Upraviť"
-            let leagueIndexes = getIndexSelectedMatch(leagueMatches, everyMatch.matchId)
-            leagueMatches[leagueIndexes[0]][leagueIndexes[1]].matchStart = true
+            if(everyMatch.underMatches === "active"){
+                // Funkcie pre získanie indexov kola, zápasu v kole a podzápasu
+                let allLeagueIndexes = getIndexesSelectedUnderMatch(leagueMatches, everyMatch.matchId)
+                // Vybraný podzápas v danom kole, prvý index kolo, druhý index zápas v kole, tretí index podzápas v hlavnom zápase a jeho nastavenie pre štart zápasu
+                let legRound = allLeagueIndexes[0]
+                let matchRound = allLeagueIndexes[1]
+                let underMatchInRound = allLeagueIndexes[2]
+                leagueMatches[legRound][matchRound].underMatches[underMatchInRound].matchStart = true
+            } else {
+                let leagueIndexes = getIndexSelectedMatch(leagueMatches, everyMatch.matchId)
+                // Vybraný zápas v danom kole, prvý index kolo druhý zápas v kole a jeho nastavenie pre štart zápasu
+                leagueMatches[leagueIndexes[0]][leagueIndexes[1]].matchStart = true
+                // Srytie tlačidla 
+                if(playingSystem === "teams" && (everyMatch.underMatches !== "oneUnderMatch" || everyMatch.underMatches !== "active")){
+                    button.style.opacity = 0
+                    // do funckie posielam - Vybraný zápas v danom kole, prvý index kolo druhý zápas v kole
+                    showPowerOnButtonUndermatches(leagueMatches[leagueIndexes[0]][leagueIndexes[1]])
+                }
+            }
             saveLeagueMatches(leagueMatches)
-        } 
+            if(playingSystem === "teams"){printLeagueMatches()}
+        }
     })
 
     if (everyMatch.matchStart) {
         generalMatchDiv.classList.add("activeLeagueMatch")
         button.textContent = "Upraviť"
+        // Skrytie hlavného zápasu po jeho aktivovaní ale len pri teamoch
+        if(playingSystem === "teams"){button.style.opacity = 0}
     } 
     if (everyMatch.matchFinished){
         generalMatchDiv.classList.remove("activeLeagueMatch")
@@ -378,6 +433,21 @@ let generateGeneralMatchDiv = (everyMatch) => {
         button.textContent = "Ukončiť"
         generateHtmlPrintLeagueTable(leagueTable, leagueMatches)
     }
+
+    // style nastavenia pre podzápasy v nastaveniach pre teams systém
+    if (everyMatch.matchStart === false && everyMatch.underMatches === "oneUnderMatch"){
+        button.style.opacity = 0
+        button.style.cursor = "default"
+        generalMatchDiv.style.backgroundColor = "#baaf57"
+        generalMatchDiv.style.color = "#ffff"
+        generalMatchDiv.style.width = "90%"
+    } 
+    if (everyMatch.underMatches === "active"){
+        button.style.opacity = 1
+        button.style.cursor = "pointer"
+        generalMatchDiv.style.width = "90%"
+    }
+    
 
     spanpl1.textContent = everyMatch.player1
     labelpl1.textContent = everyMatch.score1
@@ -395,14 +465,15 @@ let generateGeneralMatchDiv = (everyMatch) => {
 
 }
 
-// Funckia pre zapnutie vybraného zápasu a zmena matchStart na true a zmena pozadia aktívneho zápasu
+// Funckia pre zapnutie vybraného zápasu a zmena matchStart na true a zmena pozadia aktívneho zápasu, dostanem index príslušného kola a index zápasu v danom kole
 let getIndexSelectedMatch = (allMatches, matchID) => {
     let indexArray = []
     allMatches.forEach((oneRound, mainIndex) => {
-        let index = oneRound.findIndex((matchStatusStart) => {
-            if (matchStatusStart.matchId === matchID) {
+        let index = oneRound.findIndex((oneMatchInRound) => {
+            // console.log(oneMatchInRound)
+            if (oneMatchInRound.matchId === matchID) {
                 indexArray.push(mainIndex)
-                return matchStatusStart.matchId === matchID
+                return oneMatchInRound.matchId === matchID
             }
             
         })
@@ -417,6 +488,33 @@ let getIndexSelectedMatch = (allMatches, matchID) => {
          
     }
     
+}
+
+// Funckia pre zapnutie vybraného podzápasu a zmena matchStart na true a zmena pozadia aktívneho podzápasu, dostanem index príslušného kola, index hlavného zápasu a index podzápasu v danom kole
+let getIndexesSelectedUnderMatch = (allMatches, matchID) => {
+    let indexesArray = []
+    let underMatchesList
+    allMatches.forEach((oneRound, roundIndex) => {
+        oneRound.forEach((mainMatch, mainMatchIndex) => {
+            if(mainMatch.underMatches !== false) {
+                let underMatchesList = mainMatch.underMatches
+                let underMatchIndex = underMatchesList.findIndex((oneUnderMatchInRound) => {
+                    if (oneUnderMatchInRound.matchId === matchID) {
+                        indexesArray.push(roundIndex)
+                        indexesArray.push(mainMatchIndex)
+                        return oneUnderMatchInRound.matchId === matchID
+                    }
+                })
+                if (underMatchIndex > -1) {
+                    indexesArray.push(underMatchIndex)
+                }
+            }
+        })
+    })
+
+    if (indexesArray.length === 3){  
+        return indexesArray  
+    } 
 }
 
 // Vytvorenie globálnej premennej pre preukladanie aktuálneho vybraného zápasu - selectedMatch
@@ -485,15 +583,21 @@ let printLeagueMatches = () => {
         let parsetLeagueMatches = getLeagueMatches()
 
         parsetLeagueMatches.forEach((oneRound, index) => {
-
             // html štruktúra pre div leagueRound, ktorý vložíme do league-matches s headingom h1 s príšlušným kolom
             let roundNumber = index + 1
             let divLeagueRound = generateLeagueRoundDiv(roundNumber)
             document.querySelector(".league-matches").appendChild(divLeagueRound)
         
             oneRound.forEach((oneMatch) => {
-                let divGeneralMatch = generateGeneralMatchDiv(oneMatch)
+                let divGeneralMatch = generateGeneralMatchDiv(oneMatch, MainLeagueSettings[1])
                 divLeagueRound.appendChild(divGeneralMatch)
+                if(oneMatch.underMatches !== false){
+                    // vytvorenie podzápasovej štruktúry
+                    oneMatch.underMatches.forEach((oneUnderMatch) => {
+                        let divUnderMatch = generateGeneralMatchDiv(oneUnderMatch, MainLeagueSettings[1])
+                        divLeagueRound.appendChild(divUnderMatch)
+                    })
+                }
         
             })
         })
@@ -585,4 +689,14 @@ let sortsTable = function(myTable){
                 return 1
             }
     })
+}
+
+
+// Vytvorenie funkcie pre zobrazenie tlačidla ZAPNÚŤ pre každý podzápas po slačení tlačidla Zapnúť pre hlavný vybraný zápas nadzápas
+let showPowerOnButtonUndermatches = (selectedMainMatch) => {
+    selectedMainMatch.underMatches.forEach((underMatch) => {
+        underMatch.underMatches = "active"
+    })
+    // // uloženie zmien v league LocalStorage
+    // saveLeagueMatches(leagueMatches)
 }

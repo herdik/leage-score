@@ -424,8 +424,16 @@ header img {
     opacity: 1;
 }
 
+.leagueRound {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 /* One match line */
 .general-match {
+    width: 98%;
     display: flex;
     justify-content: center;
     align-items: center;
