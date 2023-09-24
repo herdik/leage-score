@@ -23,6 +23,38 @@
 <body>
 
     <!-- Modal okno pre editácia ligového zápasu -->
+    <dialog id="modal-choose-players">
+        <form id="selectForm" method="dialog">
+            <h1>Ligový zápas</h1>
+            
+            <div class="matchInfos">
+                <div class="select-modal-players">
+                    <span class="select-pl1-span">
+                        <select class="chooseTeam" id="Team1" name="playTeam1">
+                            <!-- <option value="svk">🇸🇰&emsp; Juraj Herda</option>
+                            <option value="cz">🇨🇿&emsp; Marian Brázdil</option>
+                            <option value="pl">🇵🇱&emsp; Gabriel Katona</option> -->
+                        </select>
+                    </span>
+                </div>
+                
+                <input type="submit" id="saveButton"n value="Uložiť" name="saveSelectMatch">
+
+                <div class="select-modal-players">
+                    
+                    <span class="select-pl2-span">
+                        <select class="chooseTeam" id="Team2" name="playTeam2">
+                            <!-- <option value="svk">🇸🇰&emsp; Marian Brázdil</option>
+                            <option value="cz">🇨🇿&emsp; Gabriel Katona</option>
+                            <option value="pl">🇵🇱&emsp; Juraj Herda</option> -->
+                        </select>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Modal okno pre editácia ligového zápasu -->
     <dialog id="modal">
         <form id="matchForm" method="dialog">
             <h1>Ligový zápas</h1>

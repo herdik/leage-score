@@ -255,10 +255,18 @@ document.querySelector(".createLeague-container button").addEventListener("click
         } else {
             playerInfo = onePlayer.teamName
         }
-        players.push({
-            player: playerInfo,
-            playerId: onePlayer.id,
-        })
+        if(MainLeagueSettings[1] !== "teams"){
+            players.push({
+                player: playerInfo,
+                playerId: onePlayer.id,
+            })
+        } else {
+            players.push({
+                player: playerInfo,
+                playerId: onePlayer.id,
+                teamPlayers: onePlayer.teamPlayers
+            })
+        }
         leagueTable.push({
             playerName: playerInfo,
             playerId: onePlayer.id, 
