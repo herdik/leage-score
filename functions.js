@@ -443,12 +443,19 @@ let generateGeneralMatchDiv = (everyMatch, playingSystem) => {
                 if((player1InUndermatch === "Jednotlivec" || player2InUndermatch === "Jednotlivec") || (player1InUndermatch === "Dvojica" || player2InUndermatch === "Dvojica")){
                     // Funckia pre zmenu stavu aktívneho zápasu
                     firstModifyModalUndermatch(leagueMatches[legRound2][matchRound2], player1InUndermatch, player2InUndermatch, selectedEmptyMatchId) 
+                } else {
+                    // Funckia pre zmenu stavu aktívneho zápasu v prípade ak sú už vybraný hráči do podzápasu
+                    let selectedMatchMain = leagueMatches[legRound2][matchRound2]
+                    let selectedUndermatch = leagueMatches[legRound2][matchRound2].underMatches[underMatchInRound2]
+                    // console.log(selectedMatchMain)
+                    // console.log(selectedUndermatch)
+                    modifyModal(selectedUndermatch, selectedMatchMain)
                 }
             } else {
                 if(playingSystem !== "teams"){
                     let leagueIndexes2 = getIndexSelectedMatch(leagueMatches, everyMatch.matchId)
                     // Funckia pre zmenu stavu aktívneho zápasu v prípade ak nie su nastavené teamy
-                    modifyModal(leagueMatches[leagueIndexes2[0]][leagueIndexes2[1]])
+                    modifyModal(leagueMatches[leagueIndexes2[0]][leagueIndexes2[1]], false)
                 }
             }
             
@@ -470,7 +477,7 @@ let generateGeneralMatchDiv = (everyMatch, playingSystem) => {
                 // Srytie tlačidla 
                 if(playingSystem === "teams" && (everyMatch.underMatches !== "oneUnderMatch" || everyMatch.underMatches !== "active")){
                     button.style.opacity = 0
-                    // do funckie posielam - Vybraný zápas v danom kole, prvý index kolo druhý zápas v kole
+                    // do funckie posielam - Vybraný zápas v danom kole, prvý index kolo druhý index je zápas v kole
                     showPowerOnButtonUndermatches(leagueMatches[leagueIndexes[0]][leagueIndexes[1]])
                 }
             }
@@ -594,12 +601,19 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
     let playerScore1 = event.target.score1.value
     let playerScore2 = event.target.score2.value
     
-    // currentEditedMatch je premenná kde je preuložený selectedMatch, teda aktuálny vybraný zápas z leagueMatches
-    currentEditedMatch.score1 = playerScore1
-    currentEditedMatch.score2 = playerScore2
+    // currentEditedMatch[0] je premenná kde je preuložený selectedMatch, teda aktuálny vybraný zápas z leagueMatches
+    currentEditedMatch[0].score1 = playerScore1
+    currentEditedMatch[0].score2 = playerScore2
     if (checkbox) {
-        currentEditedMatch.matchFinished = checkbox
-        currentEditedMatch.matchStart = false
+        currentEditedMatch[0].matchFinished = checkbox
+        currentEditedMatch[0].matchStart = false
+    }
+    console.log(currentEditedMatch[0])
+    console.log(currentEditedMatch[1])
+    // pripočítať skóre bod do hlavného zápasu po ukončení podzápasu platí pre setting Teams
+    if (currentEditedMatch[0].underMatches === "active" && checkbox){
+        console.log("pripočítaj bod")
+        playerScore1 > playerScore2 ? currentEditedMatch[1].score1 += 1 : currentEditedMatch[1].score2 += 1
     }
 
     // uloženie zmien v league LocalStorage
@@ -617,9 +631,9 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
 
 // Funckia pre zobrazenie vybraného aktívneho zápasu zavolaním modal dialog window, kde sa načítajú hodnoty zo selectedMatch
 // alebo vybraného podzápasu ak existuhú nastavenia pre teamy a po prvom stlační na modal boli vyvolení hráč z options z funckie firstModifyModalUndermatch()
-let modifyModal = (selectedMatch) => {
+let modifyModal = (selectedMatch, mainSelectedMatch) => {
     // uloženie do globálnej premennej aktuálny selectedMatch
-    currentEditedMatch = selectedMatch
+    currentEditedMatch = [selectedMatch, mainSelectedMatch]
 
     let firstPlayer = selectedMatch.player1
     let firstPlayerScore = selectedMatch.score1
