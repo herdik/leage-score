@@ -608,12 +608,20 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
         currentEditedMatch[0].matchFinished = checkbox
         currentEditedMatch[0].matchStart = false
     }
-    console.log(currentEditedMatch[0])
-    console.log(currentEditedMatch[1])
+
     // pripočítať skóre bod do hlavného zápasu po ukončení podzápasu platí pre setting Teams
     if (currentEditedMatch[0].underMatches === "active" && checkbox){
-        console.log("pripočítaj bod")
+        let undermatchesInMainMatch = []
         playerScore1 > playerScore2 ? currentEditedMatch[1].score1 += 1 : currentEditedMatch[1].score2 += 1
+        currentEditedMatch[1].underMatches.forEach((underMatch) => {
+            if(underMatch.matchFinished){
+                undermatchesInMainMatch.push(underMatch.matchFinished)
+            }
+        })
+        if(undermatchesInMainMatch.length === 6){
+            currentEditedMatch[1].matchFinished = true
+            currentEditedMatch[1].matchStart = false
+        } 
     }
 
     // uloženie zmien v league LocalStorage
