@@ -266,6 +266,24 @@ let createUnderTeamLeague = () => {
 }
 
 
+// vytvorenie všetkých možných unikátnych dvojíc pre options menu v Modal window pre dvojice možnosť
+let createUniqDoubles = (allTeamPlayers) => {
+    let uniqDoubles = []
+
+    allTeamPlayers.forEach((onePlayer, playerIndex1) => {
+        allTeamPlayers.forEach((secondPlayer, playerIndex2) => {
+            if(playerIndex2 > playerIndex1){
+                if(playerIndex1 !== playerIndex2){
+                    uniqDoubles.push([onePlayer, secondPlayer])
+                }
+            }
+        })
+    })
+
+    return uniqDoubles
+}
+
+
 // vytvorenie ligových podzápasov pre teamy funkcia
 let createLeague = function(checkedTeams, revengeMatch, playingSetting) {
     
@@ -288,10 +306,14 @@ let createLeague = function(checkedTeams, revengeMatch, playingSetting) {
                 player1: checkedTeams[i].player,
                 player1Id: checkedTeams[i].playerId, 
                 playersTeam1: false,
+                optionsSingles1: false,
+                optionsDoubles1: false,
                 score1: 0,
                 player2: checkedTeams[(checkedTeams.length -1) - i].player,
                 player2Id: checkedTeams[(checkedTeams.length -1) - i].playerId,
                 playersTeam2: false,
+                optionsSingles2: false,
+                optionsDoubles2: false,
                 score2: 0,
                 underMatches: false, 
             })
@@ -304,6 +326,10 @@ let createLeague = function(checkedTeams, revengeMatch, playingSetting) {
                     one_round[i].underMatches = createUnderTeamLeague()
                     one_round[i].playersTeam1 = checkedTeams[i].teamPlayers
                     one_round[i].playersTeam2 = checkedTeams[(checkedTeams.length -1) - i].teamPlayers
+                    one_round[i].optionsSingles1 = one_round[i].playersTeam1.slice()
+                    one_round[i].optionsSingles2 = one_round[i].playersTeam2.slice() 
+                    one_round[i].optionsDoubles1 = createUniqDoubles(one_round[i].playersTeam1)
+                    one_round[i].optionsDoubles2 = createUniqDoubles(one_round[i].playersTeam2)
                 }
             }
                 
@@ -331,6 +357,10 @@ let createLeague = function(checkedTeams, revengeMatch, playingSetting) {
                     revengeMatches[i].underMatches = createUnderTeamLeague()
                     revengeMatches[i].playersTeam1 = checkedTeams[(checkedTeams.length -1) - i].teamPlayers
                     revengeMatches[i].playersTeam2 = checkedTeams[i].teamPlayers
+                    revengeMatches[i].optionsSingles1 = revengeMatches[i].playersTeam1.slice()
+                    revengeMatches[i].optionsSingles2 = revengeMatches[i].playersTeam2.slice()
+                    revengeMatches[i].optionsDoubles1 = createUniqDoubles(revengeMatches[i].playersTeam1)
+                    revengeMatches[i].optionsDoubles2 = createUniqDoubles(revengeMatches[i].playersTeam2)
                 }
             }
             
@@ -614,33 +644,70 @@ document.querySelector("#selectForm").addEventListener("submit", (event) => {
     // currentEditedMatch[0] Globálna premenná kdde je preuložený aktuálny vybratý zápas
     // currentEditedMatch[1] Globálna premenná kdde je preuložený aktuálny ID prázdeho zápasu kde chcem doplniť hráčov
     let emptyMatchID = currentEditedMatch[1]
-    let selectedFirst = event.target.playTeam1.value
-    let selectedSecond = event.target.playTeam2.value
+
+    // id ozančené užívateľom pre každý team pre 
+    let selectedFirstId = event.target.playTeam1.value
+    let selectedSecondId = event.target.playTeam2.value
+
+    // vytvorenie pole Ids v prípade že pole obsahuje "/" teda ak posielam dvojicu ak je hráč samotný vznikne pole o jednom hráčovi
+    const team1DoubleId = selectedFirstId.split("/")
+    const team2DoubleId = selectedSecondId.split("/")
 
     // získanie objektu každého selektovaného hráča na základe ID
     let selectedPlayer1 = currentEditedMatch[0].playersTeam1.filter(function(onePlayer){
-        let tryToFind = onePlayer.id.includes(selectedFirst)
-        return tryToFind
+        let tryToFind1 = onePlayer.id.includes(team1DoubleId[0])
+        let tryToFind2 = onePlayer.id.includes(team1DoubleId[1])
+        if (team1DoubleId.length < 2) {
+            return tryToFind1
+        } else {
+            return tryToFind1 || tryToFind2
+        }    
     })
     let selectedPlayer2 = currentEditedMatch[0].playersTeam2.filter(function(onePlayer){
-        let tryToFind = onePlayer.id.includes(selectedSecond)
-        return tryToFind
+        let tryToFind1 = onePlayer.id.includes(team2DoubleId[0])
+        let tryToFind2 = onePlayer.id.includes(team2DoubleId[1])
+        if (team2DoubleId.length < 2) {
+            return tryToFind1
+        } else {
+            return tryToFind1 || tryToFind2
+        }
     })
 
-    console.log(selectedPlayer1)
-    console.log(selectedPlayer2)
-
-    
     // Zapísanie všetkých hodnôt - currentEditedMatch[0] je premenná kde je preuložený selectedMatch, teda aktuálny vybraný hlavný zápas z leagueMatches
     // Ale k vybratému podzápasu sa dostanem cez ID podzápasu, ktoré najdem v hlavnom zápase underMatches
     currentEditedMatch[0].underMatches.forEach((oneMatch) => {
         if (oneMatch.matchId === emptyMatchID) {
-            oneMatch.player1 = selectedPlayer1[0].firstName + " " + selectedPlayer1[0].secondName
-            oneMatch.player1Id = selectedPlayer1[0].id
-            oneMatch.player2 = selectedPlayer2[0].firstName + " " + selectedPlayer2[0].secondName
-            oneMatch.player2Id = selectedPlayer2[0].id
+            oneMatch.player1 = team1DoubleId.length < 2 ? selectedPlayer1[0].firstName + " " + selectedPlayer1[0].secondName : selectedPlayer1[0].firstName + " " + selectedPlayer1[0].secondName + " - " + selectedPlayer1[1].firstName + " " + selectedPlayer1[1].secondName
+            oneMatch.player1Id = team1DoubleId.length < 2 ? selectedPlayer1[0].id : [selectedPlayer1[0].id, selectedPlayer1[1].id]
+            oneMatch.player2 = team2DoubleId.length < 2 ? selectedPlayer2[0].firstName + " " + selectedPlayer2[0].secondName : selectedPlayer2[0].firstName + " " + selectedPlayer2[0].secondName + " - " + selectedPlayer2[1].firstName + " " + selectedPlayer2[1].secondName
+            oneMatch.player2Id = team2DoubleId.length < 2 ? selectedPlayer2[0].id : [selectedPlayer2[0].id, selectedPlayer2[1].id]
         }
     })
+
+    // Vymazanie vybraných hráčov / dvojíc z optionssingles a optionsdoubles
+    
+    if (team1DoubleId.length < 2 && team2DoubleId.length < 2) {
+        let indexOptionSingle = getIndexSelectedOption(currentEditedMatch[0].optionsSingles1, team1DoubleId)
+        currentEditedMatch[0].optionsSingles1.splice(indexOptionSingle, 1)
+        indexOptionSingle = getIndexSelectedOption(currentEditedMatch[0].optionsSingles2, team2DoubleId)
+        currentEditedMatch[0].optionsSingles2.splice(indexOptionSingle, 1)
+
+        // let indexOptionSingle = currentEditedMatch[0].optionsSingles1.findIndex(function(onePlayer){
+        //     return onePlayer.id.includes(team1DoubleId[0])  
+        // })
+        // currentEditedMatch[0].optionsSingles1.slice(indexOptionSingle, 1)
+    } else {
+        let indexOptionDouble = getIndexSelectedOption(currentEditedMatch[0].optionsDoubles1, team1DoubleId)
+        currentEditedMatch[0].optionsDoubles1.splice(indexOptionDouble, 1)
+        indexOptionDouble = getIndexSelectedOption(currentEditedMatch[0].optionsDoubles2, team2DoubleId)
+        currentEditedMatch[0].optionsDoubles2.splice(indexOptionDouble, 1)
+
+        // let indexOptionDouble = currentEditedMatch[0].optionsDoubles1.findIndex((oneDoubles) => {
+        //     return oneDoubles[0].id.includes(team1DoubleId[0]) && oneDoubles[1].id.includes(team1DoubleId[1])
+        // })
+        // currentEditedMatch[0].optionsDoubles1.slice(indexOptionDouble, 1)
+    }
+    
     // uloženie zmien v league LocalStorage
     saveLeagueMatches(leagueMatches)
     
@@ -653,40 +720,33 @@ document.querySelector("#selectForm").addEventListener("submit", (event) => {
 
 })
 
+// získanie indexu vybranej option zo select, pre podzápasy v jednotlicvoch a v dvojiciach
+let getIndexSelectedOption = (selectOption, singleOrDoubleId) => {
+    let selectedIndex = selectOption.findIndex(function(playerTocheck){
+        if(singleOrDoubleId.length < 2){
+            return playerTocheck.id.includes(singleOrDoubleId[0])
+        } else {
+            return playerTocheck[0].id.includes(singleOrDoubleId[0]) && playerTocheck[1].id.includes(singleOrDoubleId[1])
+        }
+        
+    })
+    return selectedIndex 
+} 
+
 // Funckia pre zobrazenie vybraného zápasu aktívneho podzápasu zavolaním modal dialog window, kde si užívateľ navolí hráčov do podzápasov
 let firstModifyModalUndermatch = (selectedMatch, currentPlayer1, currentPlayer2, emptyMatch) => {
 
-    // uloženie do globálnej premennej aktuálny selectedMatch
+    // uloženie do globálnej premennej aktuálny selectedMatch - hlavný zápas, emptyMatch kliknutý aktuálny prázdny podzápas pre zápísanie údajov
     currentEditedMatch = [selectedMatch, emptyMatch]
 
     let team1 = [], team2 = []
     
     if(currentPlayer1 === "Jednotlivec" || currentPlayer2 === "Jednotlivec"){
-        team1 = selectedMatch.playersTeam1
-        team2 = selectedMatch.playersTeam2
+        team1 = selectedMatch.optionsSingles1
+        team2 = selectedMatch.optionsSingles2
     } else {
-        let temporaryTeam1 = selectedMatch.playersTeam1
-        let temporaryTeam2 = selectedMatch.playersTeam2
-
-        temporaryTeam1.forEach((onePlayer, playerIndex1) => {
-            temporaryTeam1.forEach((secondPlayer, playerIndex2) => {
-                if(playerIndex2 > playerIndex1){
-                    if(playerIndex1 !== playerIndex2){
-                        team1.push([onePlayer, secondPlayer])
-                    }
-                }
-            })
-        })
-
-        temporaryTeam2.forEach((onePlayer, playerIndex1) => {
-            temporaryTeam2.forEach((secondPlayer, playerIndex2) => {
-                if(playerIndex2 > playerIndex1){
-                    if(playerIndex1 !== playerIndex2){
-                        team2.push([onePlayer, secondPlayer])
-                    }
-                }
-            })
-        })
+        team1 = selectedMatch.optionsDoubles1
+        team2 = selectedMatch.optionsDoubles2
     }
     
     const modalChoosePlayer = document.querySelector("#modal-choose-players")
@@ -699,10 +759,11 @@ let firstModifyModalUndermatch = (selectedMatch, currentPlayer1, currentPlayer2,
 
     team1.forEach((onePlayer, playerIndex) => {
         let optionPlayer1 = document.createElement("option")
-        optionPlayer1.value = onePlayer.id
         if(currentPlayer1 === "Jednotlivec" || currentPlayer2 === "Jednotlivec"){
+            optionPlayer1.value = onePlayer.id
             optionPlayer1.innerHTML = `${onePlayer.firstName} ${onePlayer.secondName}`
         } else {
+            optionPlayer1.value = onePlayer[0].id + "/" + onePlayer[1].id
             optionPlayer1.innerHTML = `${onePlayer[0].firstName.charAt(0)}. ${onePlayer[0].secondName} /
             ${onePlayer[1].firstName.charAt(0)}. ${onePlayer[1].secondName}`
         }
@@ -711,10 +772,11 @@ let firstModifyModalUndermatch = (selectedMatch, currentPlayer1, currentPlayer2,
 
     team2.forEach((onePlayer, playerIndex) => {
         let optionPlayer2 = document.createElement("option")
-        optionPlayer2.value = onePlayer.id
         if(currentPlayer1 === "Jednotlivec" || currentPlayer2 === "Jednotlivec"){
+            optionPlayer2.value = onePlayer.id
             optionPlayer2.innerHTML = `${onePlayer.firstName} ${onePlayer.secondName}`
         } else {
+            optionPlayer2.value = onePlayer[0].id + "/" + onePlayer[1].id
             optionPlayer2.innerHTML = `${onePlayer[0].firstName.charAt(0)}. ${onePlayer[0].secondName} /
             ${onePlayer[1].firstName.charAt(0)}. ${onePlayer[1].secondName}`
         }
