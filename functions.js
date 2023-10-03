@@ -246,8 +246,8 @@ let saveLeagueTable = (allLeagueTable) => {
 let createUnderTeamLeague = () => {
     let underMatchesArray = []
     let playerInMatch
-    for (let round = 0; round < 6; round++) {
-        playerInMatch = round % 2 === 0 ? "Jednotlivec" : "Dvojica"
+    for (let round = 0; round < 9; round++) {
+        playerInMatch = round % 2 === 0 || round > 5 ? "Jednotlivec" : "Dvojica"
         underMatchesArray.push({                
             matchStart: false,
             matchFinished: false,
@@ -441,15 +441,30 @@ let generateGeneralMatchDiv = (everyMatch, playingSystem) => {
                 
                 
                 if((player1InUndermatch === "Jednotlivec" || player2InUndermatch === "Jednotlivec") || (player1InUndermatch === "Dvojica" || player2InUndermatch === "Dvojica")){
+                    
+                    
                     // Funckia pre zmenu stavu aktívneho zápasu
                     firstModifyModalUndermatch(leagueMatches[legRound2][matchRound2], player1InUndermatch, player2InUndermatch, selectedEmptyMatchId) 
+                    
+                    
+
                 } else {
                     // Funckia pre zmenu stavu aktívneho zápasu v prípade ak sú už vybraný hráči do podzápasu
                     let selectedMatchMain = leagueMatches[legRound2][matchRound2]
                     let selectedUndermatch = leagueMatches[legRound2][matchRound2].underMatches[underMatchInRound2]
-                    // console.log(selectedMatchMain)
-                    // console.log(selectedUndermatch)
+                    
                     modifyModal(selectedUndermatch, selectedMatchMain)
+                
+                    // let extesionUndermatches = leagueMatches[legRound2][matchRound2].underMatches
+                    // let scoreFirstTeam = leagueMatches[legRound2][matchRound2].score1
+                    // let scoreSecondTeam = leagueMatches[legRound2][matchRound2].score2
+
+
+                    // if ((scoreFirstTeam === 3 && scoreSecondTeam === 3) && (extesionUndermatches[6].matchStart != true && extesionUndermatches[7].matchStart != true && extesionUndermatches[8].matchStart != true )){
+                    //     leagueMatches[legRound2][matchRound2].optionsSingles1 = leagueMatches[legRound2][matchRound2].playersTeam1.slice()
+                    //     leagueMatches[legRound2][matchRound2].optionsSingles2 = leagueMatches[legRound2][matchRound2].playersTeam2.slice()
+                    // }
+                    
                 }
             } else {
                 if(playingSystem !== "teams"){
@@ -618,11 +633,31 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
                 undermatchesInMainMatch.push(underMatch.matchFinished)
             }
         })
-        if(undermatchesInMainMatch.length === 6){
+        // ukončenie hlavného nadzápasu ak je stav po odohratí 6 podzápasov nie je remíza a keď remíza je ale víťaž bude po ukončení 9 podzápasov
+        if((undermatchesInMainMatch.length === 6) && (currentEditedMatch[1].score1 != 3 && currentEditedMatch[1].score2 != 3)){
             currentEditedMatch[1].matchFinished = true
             currentEditedMatch[1].matchStart = false
-        } 
+        } else if (undermatchesInMainMatch.length === 9) {
+            currentEditedMatch[1].matchFinished = true
+            currentEditedMatch[1].matchStart = false
+        }
+
+        // znovunaplnenie optionsSingle teda možnosti pre výber sigle hráča v prípade ak je stav zápasu 3:3 po ukončení základných podzápasov
+        // currentEditedMatch[1] reprezentuje hlavný zápas
+        let extesionUndermatches = currentEditedMatch[1].underMatches
+        console.log(currentEditedMatch[1].score1)
+        console.log(currentEditedMatch[1].score2)
+        console.log(extesionUndermatches)
+        
+
+        if ((currentEditedMatch[1].score1 === 3 && currentEditedMatch[1].score2 === 3) && (extesionUndermatches[6].matchStart != true && extesionUndermatches[7].matchStart != true && extesionUndermatches[8].matchStart != true )){
+            currentEditedMatch[1].optionsSingles1 = currentEditedMatch[1].playersTeam1.slice()
+            currentEditedMatch[1].optionsSingles2 = currentEditedMatch[1].playersTeam2.slice()
+        }
+
     }
+
+    
 
     // uloženie zmien v league LocalStorage
     saveLeagueMatches(leagueMatches)
@@ -831,8 +866,16 @@ let printLeagueMatches = () => {
                 divLeagueRound.appendChild(divGeneralMatch)
                 if(oneMatch.underMatches !== false){
                     // vytvorenie podzápasovej štruktúry
-                    oneMatch.underMatches.forEach((oneUnderMatch) => {
+                    oneMatch.underMatches.forEach((oneUnderMatch, index) => {
                         let divUnderMatch = generateGeneralMatchDiv(oneUnderMatch, MainLeagueSettings[1])
+                        // zobrazenie a skrytie podzápasov v prípade ak je stav po základných podzápasoch remíza
+                        // rozhodujúce podzápasy sú od indexu 6
+                        if(oneMatch.score1 >= 3 && oneMatch.score2 >= 3){
+                            divUnderMatch.classList.remove("hide")
+                        } else{
+                            if(index > 5){divUnderMatch.classList.add("hide")}
+                        }
+                        
                         divLeagueRound.appendChild(divUnderMatch)
                     })
                 }
