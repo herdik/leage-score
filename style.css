@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Tektur&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Tektur', cursive;
+    list-style: none;
 }
 
 body {
@@ -148,6 +151,102 @@ header img {
     padding-right: 20px;
     margin-bottom: 20px;
     margin-left: 20px;
+}
+
+/* Race to - hrá sa do */
+#league-settings #raceTo{
+    width: 70px;
+    padding: 4px 10px 4px 2px;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 20px;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    box-shadow: 0 0 3px 3px #888888;
+  }
+
+/* Option list pre výber typu hry */
+
+.game-menu .game-title{
+    font-weight: 700;
+}
+
+.game-option-list {
+    width: 80px;
+    margin: 15px auto;
+    position: relative;
+    user-select: none;
+}
+
+.game-option-list .defaultOption {
+    border: 2px groove;
+    border-color: #97929288 #ddddddb7 #dddddd7e #b1afaf;
+    border-radius: 20px;
+    position: relative;
+    height: 30px;
+    cursor: pointer;
+
+}
+
+.game-option-list .defaultOption::before{
+    content: "";
+    position: absolute;
+    top: 4px;
+    right: 10px;
+    width: 6px;
+    height: 6px;
+    border: 2px solid;
+    border-color: transparent transparent black black;
+    transform: rotate(-45deg);
+}
+
+.chooseGame {
+    width: 40px;
+    margin: 0 auto;
+    border: 1px groove;
+    border-color: #97929288 #ddddddb7 #dddddd7e #b1afaf;
+    border-radius: 5px;
+    max-height: 10px;
+    overflow: hidden;
+    /* slúži pre vytvorenie scrollovacej lišty ak obsah je vačší ako je ho možné zobraziť */
+    transition: max-height .8s ease-out, opacity 1.2s linear;
+    opacity: 0;
+}
+
+/* nastavenia pre zobrazených registrovaných hráčov*/
+.show-gameOptions {
+    max-height: 800px;
+    transition: max-height 1s ease-in, opacity 1s linear;
+    opacity: 1;
+}
+
+.game-option-list .chooseGame li {
+    cursor: pointer;
+}
+
+.game-option-list .chooseGame li:hover{
+    background-color: #b7b4b46c;
+}
+
+.game-option-list .chooseGame li:first-child:hover{
+    background-color: #b7b4b44f;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.game-option-list .chooseGame li:last-child:hover{
+    background-color: #b7b4b46c;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.game-option-list.activeIcon .defaultOption:before{
+    transform: rotate(-225deg);
+    top: 10px;
+}
+
+.ballImage img{
+    margin-top: 3px;
+    width: 20px;
+    height: 20px;
 }
 
 

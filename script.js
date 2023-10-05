@@ -10,7 +10,10 @@ let registeredPlayersArray = getRegisteredPlayers()
 // Zavolanie funkcie kde sú aktuálny registrované teamy, v prípade že hráča nemám tak vytvorí prázdne pole
 let registeredTeamsArray = getRegisteredTeams()
 
-
+// Nastavenie pre každý input number teda pre zadávanie skóre jednotnú maximálnu hodnotu
+document.querySelectorAll('input[type="number"]').forEach((scoreMax) => {
+    scoreMax.setAttribute("max",10)
+})
 // System league settings
 document.querySelector("#league-settings").addEventListener("submit", (event) => {
     // vypnutie update/refresh formulára po odoslaní
@@ -94,6 +97,34 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
         document.querySelector(".changeBtn").classList.add("hide")
     }
 })
+
+// // skrytie optionlist pre výber typu hry a otáčanie zobáčika
+document.querySelector(".defaultOption").addEventListener("click", () => {
+    document.querySelector(".game-option-list").classList.toggle("activeIcon")
+    document.querySelector(".chooseGame").classList.toggle("show-gameOptions")
+
+})
+
+// Zachytenie výberu typu hry z Options list game-menu -  game-option-list
+document.querySelector(".chooseGame").addEventListener("click", (e) => {
+    const newSelectedOption = e.target
+    document.querySelector(".default img").src = newSelectedOption.src
+    document.querySelector(".chooseGame").classList.toggle("show-gameOptions")
+    document.querySelector(".game-option-list").classList.toggle("activeIcon")
+})
+
+
+// Skrytie výberu typu hry pre Teams - teamy
+document.querySelector("#match-settings").addEventListener("change", function(event){
+    let selectedOpt = event.target.value
+    if(selectedOpt === "teams"){
+        document.querySelector(".game-menu").classList.add("hide")
+    } else{
+        document.querySelector(".game-menu").classList.remove("hide")
+    }
+    
+})
+
 
 
 // Zachytenie nového registrovaného hráča a uloženie ho do localStorage 
