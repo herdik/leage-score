@@ -121,8 +121,9 @@
                     <option value="teams">Teamy</option>
                 </select><br>
                 <label for="raceTo">Hrať do</label>
-                <input type="number" id="raceTo" min="0" value="1" step="1" name="score1"><br>
+                <input type="number" id="raceTo" min="0" value="1" step="1" name="raceTo"><br>
                 
+                <!-- výber typu hry -->
                 <div class="game-menu">
 
                     <div class="game-title">
@@ -133,7 +134,7 @@
                         <ul class="defaultOption">
                             <li>
                                 <div class="gameOption default">
-                                    <div class="ballImage"><img src="img/eight-ball.png" alt=""></div>
+                                    <div class="ballImage"><img src="img/eight-ball.png" alt="eight-ball"></div>
                                 </div>
                             </li>
                         </ul>
@@ -141,33 +142,26 @@
                         <ul class="chooseGame">
                             <li>
                                 <div class="gameOption">
-                                    <div class="ballImage"><img src="img/eight-ball.png" alt=""></div>
+                                    <div class="ballImage"><img src="img/eight-ball.png" alt="eight-ball"></div>
                                 </div>
                             </li>
                             <li>
                                 <div class="gameOption">
-                                    <div class="ballImage"><img src="img/nine-ball.png" alt=""></div>
+                                    <div class="ballImage"><img src="img/nine-ball.png" alt="nine-ball"></div>
                                 </div>
                             </li>
                             <li>
                                 <div class="gameOption">
-                                    <div class="ballImage"><img src="img/ten-ball.png" alt=""></div>
+                                    <div class="ballImage"><img src="img/ten-ball.png" alt="ten-ball"></div>
                                 </div>
                             </li>
                         </ul>
-
-
                     </div>
-                    
-
                 </div>
                 
-                
-                <input type="submit" value="Potvrdiť" name="submitForm"><br>
+                <!-- odosielacie tlačítko pre odolsanie údajov od užívateľa pre nastavenia hry -->
+                <input type="submit" value="Potvrdiť" name="submitForm">
 
-                
-                
-        
             </form>
 
         </div>
@@ -189,13 +183,42 @@
                 <input class="submit" type="submit" value="Zapísať" name="submitForm"><br>
 
                 <!-- výber krajiny z options -->
-                <select id="countries" name="countryOption">
-                    <option value="svk">🇸🇰 Slovakia</option>
-                    <option value="cz">🇨🇿 Czech republic</option>
-                    <option value="pl">🇵🇱 Poland</option>
-                </select>
+                <div class="contry-menu">
+
+                    <div class="selected-country">
+                        <img src="img/flags/Slovensko.png" alt="Slovensko">
+                        <div class="selected-countryName">Slovensko</div>
+                    </div>
+
+                    <div class="country-options-list">
+                        <div class="country-option">
+                            <img src="img/flags/Slovensko.png" alt="Slovensko">
+                            <div class="country-name">Slovensko</div>
+                        </div>
+                        <div class="country-option">
+                            <img src="img/flags/Česko.png" alt="Česko">
+                            <div class="country-name">Česko</div>
+                        </div>
+                        <div class="country-option">
+                            <img src="img/flags/Poľsko.png" alt="Poľsko">
+                            <div class="country-name">Poľsko</div>
+                        </div>
+                        <div class="country-option">
+                            <img src="img/flags/Maďarsko.png" alt="Maďarsko">
+                            <div class="country-name">Maďarsko</div>
+                        </div>
+                        <div class="country-option">
+                            <img src="img/flags/Nemecko.png" alt="Nemecko">
+                            <div class="country-name">Nemecko</div>
+                        </div>
+                        <div class="country-option">
+                            <img src="img/flags/Rakúsko.png" alt="Rakúsko">
+                            <div class="country-name">Rakúsko</div>
+                        </div>
+                    </div>
+
+                </div>
                 
-        
             </form>
             
 
@@ -215,7 +238,7 @@
             <!-- Zoznam registrovaných hráčov -->
             <ol class="registered-players-list">
                 <!-- <li>
-                    <img src="img/slovakia-flag.png" alt="slovakia-flag">
+                    <img src="img/Slovensko.png" alt="Slovensko">
                     <div class="player-informations">
                         <h3>Marián Brázdil</h3>
                         <p>BK MANILA Topoľčany</p>
@@ -223,7 +246,7 @@
                 </li>
                 
                 <li>
-                    <img src="img/slovakia-flag.png" alt="slovakia-flag">
+                    <img src="img/Slovensko.png" alt="Slovensko">
                     <div class="player-informations">
                         <h3>Juraj Herda</h3>
                         <p>BK MANILA Topoľčany</p>
@@ -231,7 +254,7 @@
                 </li>
                 
                 <li>
-                    <img src="img/slovakia-flag.png" alt="slovakia-flag">
+                    <img src="img/Slovensko.png" alt="Slovensko">
                     <div class="player-informations">
                         <h3>Jaroslav Bajzík</h3>
                         <p>BK MANILA Topoľčany</p>

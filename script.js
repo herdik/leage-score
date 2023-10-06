@@ -18,22 +18,32 @@ document.querySelectorAll('input[type="number"]').forEach((scoreMax) => {
 document.querySelector("#league-settings").addEventListener("submit", (event) => {
     // vypnutie update/refresh formulára po odoslaní
     event.preventDefault()
+    MainLeagueSettings = []
     // Skrytie formulára po odoslaní nastavení
     document.querySelector(".system-container").classList.add("hide")
     
     // Variable odoslané do MainLeagueSettings()
     let checkbox = event.target.checkbox.checked
     let settingsMatches = event.target.matchSettings.value
+    let raceToPlay = event.target.raceTo.value
+    let choosedGameNumber = event.target.querySelector(".default img").alt
 
     // Array pre záskanie odvety a match setting(single, doubles teams) a jeho naplnenie
     MainLeagueSettings.push(checkbox)
     MainLeagueSettings.push(settingsMatches)
+    MainLeagueSettings.push(raceToPlay)
+    MainLeagueSettings.push(choosedGameNumber)
+    console.log(MainLeagueSettings)
     
     // Uloženie League System Settings do Local Storage
     saveLeagueSystemSettings(MainLeagueSettings)
     // Default nastavenia pre checkbox a options in match-settings
     event.target.checkbox.checked = false
     event.target.matchSettings.selectedIndex = 0
+    event.target.raceTo.value = "1"
+    event.target.querySelector(".default img").src = "img/eight-ball.png"
+    event.target.querySelector(".default img").alt = "eight-ball"
+
     
     // Úprava registračného formulára pri nastaveniach pre dvojice a teamy
     if(settingsMatches === "doubles"){
@@ -45,11 +55,41 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
             <input type="text" placeholder="Klub" name="playersClub">
             <input class="submit" type="submit" value="Zapísať" name="submitForm"><br>
             <!-- výber krajiny z options -->
-                <select id="countries" name="countryOption">
-                    <option value="svk">🇸🇰&emsp; Slovakia</option>
-                    <option value="cz">🇨🇿&emsp; Czech republic</option>
-                    <option value="pl">🇵🇱&emsp; Poland</option>
-                </select>
+            <div class="contry-menu">
+
+                <div class="selected-country">
+                    <img src="img/flags/Slovensko.png" alt="Slovensko">
+                    <div class="selected-countryName">Slovensko</div>
+                </div>
+
+                <div class="country-options-list">
+                    <div class="country-option">
+                        <img src="img/flags/Slovensko.png" alt="Slovensko">
+                        <div class="country-name">Slovensko</div>
+                    </div>
+                    <div class="country-option">
+                        <img src="img/flags/Česko.png" alt="Česko">
+                        <div class="country-name">Česko</div>
+                    </div>
+                    <div class="country-option">
+                        <img src="img/flags/Poľsko.png" alt="Poľsko">
+                        <div class="country-name">Poľsko</div>
+                    </div>
+                    <div class="country-option">
+                        <img src="img/flags/Maďarsko.png" alt="Maďarsko">
+                        <div class="country-name">Maďarsko</div>
+                    </div>
+                    <div class="country-option">
+                        <img src="img/flags/Nemecko.png" alt="Nemecko">
+                        <div class="country-name">Nemecko</div>
+                    </div>
+                    <div class="country-option">
+                        <img src="img/flags/Rakúsko.png" alt="Rakúsko">
+                        <div class="country-name">Rakúsko</div>
+                    </div>
+                </div>
+
+            </div>
             `
     } else if (settingsMatches === "teams"){
         let changeButton = document.createElement("button")
@@ -62,11 +102,41 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
             <input class="submit" type="submit" value="Zapísať" name="submitForm"><br>
 
             <!-- výber krajiny z options -->
-                <select id="countries" name="countryOption">
-                    <option value="svk">🇸🇰&emsp; Slovakia</option>
-                    <option value="cz">🇨🇿&emsp; Czech republic</option>
-                    <option value="pl">🇵🇱&emsp; Poland</option>
-                </select>
+            <div class="contry-menu">
+
+                <div class="selected-country">
+                    <img src="img/flags/Slovensko.png" alt="Slovensko">
+                    <div class="selected-countryName">Slovensko</div>
+                </div>
+
+                <div class="country-options-list">
+                    <div class="country-option">
+                        <img src="img/flags/Slovensko.png" alt="Slovensko">
+                        <div class="country-name">Slovensko</div>
+                    </div>
+                    <div class="country-option">
+                        <img src="img/flags/Česko.png" alt="Česko">
+                        <div class="country-name">Česko</div>
+                    </div>
+                    <div class="country-option">
+                        <img src="img/flags/Poľsko.png" alt="Poľsko">
+                        <div class="country-name">Poľsko</div>
+                    </div>
+                    <div class="country-option">
+                        <img src="img/flags/Maďarsko.png" alt="Maďarsko">
+                        <div class="country-name">Maďarsko</div>
+                    </div>
+                    <div class="country-option">
+                        <img src="img/flags/Nemecko.png" alt="Nemecko">
+                        <div class="country-name">Nemecko</div>
+                    </div>
+                    <div class="country-option">
+                        <img src="img/flags/Rakúsko.png" alt="Rakúsko">
+                        <div class="country-name">Rakúsko</div>
+                    </div>
+                </div>
+
+            </div>
             `
         document.querySelector(".first-container").appendChild(changeButton)
         // Vymazanie placeholdera pre club po kliknutí na tlačítko Zmena družstva
@@ -98,7 +168,7 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
     }
 })
 
-// // skrytie optionlist pre výber typu hry a otáčanie zobáčika
+// skrytie optionlist pre výber typu hry a otáčanie zobáčika
 document.querySelector(".defaultOption").addEventListener("click", () => {
     document.querySelector(".game-option-list").classList.toggle("activeIcon")
     document.querySelector(".chooseGame").classList.toggle("show-gameOptions")
@@ -108,7 +178,15 @@ document.querySelector(".defaultOption").addEventListener("click", () => {
 // Zachytenie výberu typu hry z Options list game-menu -  game-option-list
 document.querySelector(".chooseGame").addEventListener("click", (e) => {
     const newSelectedOption = e.target
-    document.querySelector(".default img").src = newSelectedOption.src
+    const newSelectedOption2 = e.target.firstChild
+    const newSelectionsList = [newSelectedOption, newSelectedOption2]
+
+    let correctBallImg = newSelectionsList.filter(function(oneBall){
+        let findBall = isImage(oneBall)
+        return findBall
+    })
+    document.querySelector(".default img").src = correctBallImg[0].src
+    document.querySelector(".default img").alt = correctBallImg[0].alt
     document.querySelector(".chooseGame").classList.toggle("show-gameOptions")
     document.querySelector(".game-option-list").classList.toggle("activeIcon")
 })
@@ -134,6 +212,7 @@ document.querySelector("#registration-form").addEventListener("submit", (event) 
     let playerFirstName = event.target.firstName.value
     let playerSecondName = event.target.secondName.value
     let playersClubName = event.target.playersClub.value
+    let selectedCountry = event.target.querySelector(".selected-countryName").textContent
 
     if(MainLeagueSettings[1] === "doubles"){
         playerFirstName = event.target.firstName.value + " " + event.target.secondName.value
@@ -148,7 +227,7 @@ document.querySelector("#registration-form").addEventListener("submit", (event) 
         firstName: playerFirstName,
         secondName: playerSecondName,
         playersClub: playersClubName,
-        countryOption: event.target.countryOption.value 
+        countryOption: selectedCountry
     }
     registeredPlayersArray.push(currentPlayer)
 
@@ -168,7 +247,9 @@ document.querySelector("#registration-form").addEventListener("submit", (event) 
     
         
     // nastavenie defaultne prvej option v Otions MENU(select id="countries" )
-    event.target.countryOption.selectedIndex = 0
+    event.target.querySelector(".selected-country img").src = "img/flags/Slovensko.png"
+    event.target.querySelector(".selected-country img").alt = "Slovensko"
+    event.target.querySelector(".selected-countryName").textContent = "Slovensko"
     
 })
 
@@ -186,11 +267,12 @@ document.querySelector(".second-container h1").addEventListener("click", () => {
 
 })
 
+// zobrazenie a skrytie registračného listu
 let changeRegForm = true
 document.querySelector(".first-container h1").addEventListener("click", () => {
     if (changeRegForm) {
         document.querySelector("#registration-form").style.cssText = `
-        max-height: 150px;
+        max-height: 250px;
         overflow-y: auto;
         transition: max-height .5s ease-in, opacity .5s linear;
         opacity: 1;
@@ -215,6 +297,36 @@ document.querySelector(".first-container h1").addEventListener("click", () => {
     }
     
 })
+
+// skrytie optionlist pre výber krajiny a vlajky a otáčanie zobáčika
+document.querySelector(".selected-country").addEventListener("click", () => {
+    document.querySelector(".selected-country").classList.toggle("turnOnIcon")
+    document.querySelector(".country-options-list").classList.toggle("show-country-options-list")
+})
+
+// výber krajiny užívateľom a nastavenie zvolenej krajiny ako selected-country
+document.querySelector(".country-options-list").addEventListener("click", (event) => {
+    // vždy jedno z flagsImg je typ Image
+    const flagImg = event.target.querySelector("img")
+    const flagImg2 = event.target
+    const flagImg3 = event.target.previousElementSibling
+    let flagsImg = [flagImg, flagImg2, flagImg3]
+
+    let correctImg = flagsImg.filter(function(oneFlag){
+        let findFlag = isImage(oneFlag)
+        return findFlag
+    })
+
+    document.querySelector(".selected-country img").src = correctImg[0].src
+    document.querySelector(".selected-countryName").textContent = correctImg[0].alt
+    document.querySelector(".selected-country").classList.toggle("turnOnIcon")
+    document.querySelector(".country-options-list").classList.toggle("show-country-options-list")
+})
+
+// funckia pre zistenie či je objekt Image slúži pre : výber krajiny užívateľom a nastavenie zvolenej krajiny ako selected-country
+let isImage = function (i) {
+    return i instanceof HTMLImageElement;
+}
 
 
 let changeLeagueNameForm = true

@@ -130,7 +130,7 @@ let generateHTMLstructure = (newRegPlayer, playingSystem) => {
     let newLi = document.createElement("li")
 
     newLi.innerHTML = `
-            <img src="img/slovakia-flag.png" alt="slovakia-flag">
+            <img src="img/flags/${newRegPlayer.countryOption}.png" alt="">
             <div class="player-informations">
                 <h3>${playingName}</h3>
                 <p>${clubName}</p>
