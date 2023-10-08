@@ -47,96 +47,23 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
     
     // Úprava registračného formulára pri nastaveniach pre dvojice a teamy
     if(settingsMatches === "doubles"){
-        document.querySelector("#registration-form").innerHTML = `
+        document.querySelector(".playerInfos").innerHTML = `
             <input type="text" placeholder="Meno 1" name="firstName">
             <input type="text" placeholder="Priezvisko 1" name="secondName"><br>
             <input type="text" placeholder="Meno 2" name="firstName2">
             <input type="text" placeholder="Priezvisko 2" name="secondName2"><br>
             <input type="text" placeholder="Klub" name="playersClub">
             <input class="submit" type="submit" value="Zapísať" name="submitForm"><br>
-            <!-- výber krajiny z options -->
-            <div class="contry-menu">
-
-                <div class="selected-country">
-                    <img src="img/flags/Slovensko.png" alt="Slovensko">
-                    <div class="selected-countryName">Slovensko</div>
-                </div>
-
-                <div class="country-options-list">
-                    <div class="country-option">
-                        <img src="img/flags/Slovensko.png" alt="Slovensko">
-                        <div class="country-name">Slovensko</div>
-                    </div>
-                    <div class="country-option">
-                        <img src="img/flags/Česko.png" alt="Česko">
-                        <div class="country-name">Česko</div>
-                    </div>
-                    <div class="country-option">
-                        <img src="img/flags/Poľsko.png" alt="Poľsko">
-                        <div class="country-name">Poľsko</div>
-                    </div>
-                    <div class="country-option">
-                        <img src="img/flags/Maďarsko.png" alt="Maďarsko">
-                        <div class="country-name">Maďarsko</div>
-                    </div>
-                    <div class="country-option">
-                        <img src="img/flags/Nemecko.png" alt="Nemecko">
-                        <div class="country-name">Nemecko</div>
-                    </div>
-                    <div class="country-option">
-                        <img src="img/flags/Rakúsko.png" alt="Rakúsko">
-                        <div class="country-name">Rakúsko</div>
-                    </div>
-                </div>
-
-            </div>
             `
     } else if (settingsMatches === "teams"){
         let changeButton = document.createElement("button")
         changeButton.classList.add("changeBtn")
         changeButton.textContent = "Registrovať družstvo"
-        document.querySelector("#registration-form").innerHTML = `
+        document.querySelector(".playerInfos").innerHTML = `
             <input type="text" placeholder="Meno" name="firstName">
             <input type="text" placeholder="Priezvisko" name="secondName"><br>
             <input type="text" placeholder="Klub" name="playersClub">
             <input class="submit" type="submit" value="Zapísať" name="submitForm"><br>
-
-            <!-- výber krajiny z options -->
-            <div class="contry-menu">
-
-                <div class="selected-country">
-                    <img src="img/flags/Slovensko.png" alt="Slovensko">
-                    <div class="selected-countryName">Slovensko</div>
-                </div>
-
-                <div class="country-options-list">
-                    <div class="country-option">
-                        <img src="img/flags/Slovensko.png" alt="Slovensko">
-                        <div class="country-name">Slovensko</div>
-                    </div>
-                    <div class="country-option">
-                        <img src="img/flags/Česko.png" alt="Česko">
-                        <div class="country-name">Česko</div>
-                    </div>
-                    <div class="country-option">
-                        <img src="img/flags/Poľsko.png" alt="Poľsko">
-                        <div class="country-name">Poľsko</div>
-                    </div>
-                    <div class="country-option">
-                        <img src="img/flags/Maďarsko.png" alt="Maďarsko">
-                        <div class="country-name">Maďarsko</div>
-                    </div>
-                    <div class="country-option">
-                        <img src="img/flags/Nemecko.png" alt="Nemecko">
-                        <div class="country-name">Nemecko</div>
-                    </div>
-                    <div class="country-option">
-                        <img src="img/flags/Rakúsko.png" alt="Rakúsko">
-                        <div class="country-name">Rakúsko</div>
-                    </div>
-                </div>
-
-            </div>
             `
         document.querySelector(".first-container").appendChild(changeButton)
         // Vymazanie placeholdera pre club po kliknutí na tlačítko Zmena družstva
@@ -151,16 +78,25 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
             registeredTeamsArray.push({
                 id: uuidv4(),
                 teamPlayers: playersArray,
-                teamName: registeredPlayersArray[0].playersClub
+                teamName: registeredPlayersArray[0].playersClub,
+                countryOption: playersArray[1].countryOption
             })
 
             saveRegisteredTeams(registeredTeamsArray)
-
+            
+             
             // generate HTML Structure for class="second-container hide" and ol class="registered-players-list"
             let oneHTML = generateHTMLstructure(registeredTeamsArray[registeredTeamsArray.length - 1], MainLeagueSettings[1])
             document.querySelector(".registered-players-list").appendChild(oneHTML)
 
-            document.querySelector("#registration-form").children.playersClub.value = "" 
+            // Vymazanie klubu po stlační tlačítka registrovať družstvo a nastavenie defaultnej krajiny v Options MENU
+            // console.log(document.querySelector("#registration-form").children)
+            document.querySelector("#registration-form").playersClub.value = ""
+            // nastavenie defaultne prvej option v Options MENU(select id="countries" )
+            document.querySelector(".selected-country img").src = "img/flags/Slovensko.png"
+            document.querySelector(".selected-country img").alt = "Slovensko"
+            document.querySelector(".selected-countryName").textContent = "Slovensko"
+            
             registeredPlayersArray = []
             saveRegisteredPlayers(registeredPlayersArray)
         })
@@ -239,6 +175,11 @@ document.querySelector("#registration-form").addEventListener("submit", (event) 
         // generate HTML Structure for class="second-container hide" and ol class="registered-players-list"
         let oneHTML = generateHTMLstructure(registeredPlayersArray[registeredPlayersArray.length - 1], MainLeagueSettings[1])
         document.querySelector(".registered-players-list").appendChild(oneHTML)
+
+        // nastavenie defaultne prvej option v Otions MENU(select id="countries" )
+        event.target.querySelector(".selected-country img").src = "img/flags/Slovensko.png"
+        event.target.querySelector(".selected-country img").alt = "Slovensko"
+        event.target.querySelector(".selected-countryName").textContent = "Slovensko"
     }
     
     // vynulovanie všetkých values po odoslaní formulára
@@ -246,10 +187,7 @@ document.querySelector("#registration-form").addEventListener("submit", (event) 
     event.target.secondName.value = ""
     
         
-    // nastavenie defaultne prvej option v Otions MENU(select id="countries" )
-    event.target.querySelector(".selected-country img").src = "img/flags/Slovensko.png"
-    event.target.querySelector(".selected-country img").alt = "Slovensko"
-    event.target.querySelector(".selected-countryName").textContent = "Slovensko"
+    
     
 })
 
@@ -272,13 +210,13 @@ let changeRegForm = true
 document.querySelector(".first-container h1").addEventListener("click", () => {
     if (changeRegForm) {
         document.querySelector("#registration-form").style.cssText = `
-        max-height: 250px;
+        max-height: 300px;
         overflow-y: auto;
         transition: max-height .5s ease-in, opacity .5s linear;
         opacity: 1;
         `
         if(MainLeagueSettings[1] === "doubles"){
-            document.querySelector("#registration-form").style.maxHeight = "550px";
+            document.querySelector("#registration-form").style.maxHeight = "600px";
         }
         changeRegForm = false
     } else {
