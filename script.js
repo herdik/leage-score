@@ -10,6 +10,9 @@ let registeredPlayersArray = getRegisteredPlayers()
 // Zavolanie funkcie kde sú aktuálny registrované teamy, v prípade že hráča nemám tak vytvorí prázdne pole
 let registeredTeamsArray = getRegisteredTeams()
 
+// Zavolanie funkcie kde sú registrované všetky dostupné stolyy, v prípade že nemám ani jeden stôl tak vytvorí prázdne pole
+let registeredTables = getNumberOfTables()
+
 // Nastavenie pre každý input number teda pre zadávanie skóre jednotnú maximálnu hodnotu
 document.querySelectorAll('input[type="number"]').forEach((scoreMax) => {
     scoreMax.setAttribute("max",10)
@@ -27,13 +30,14 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
     let settingsMatches = event.target.matchSettings.value
     let raceToPlay = event.target.raceTo.value
     let choosedGameNumber = event.target.querySelector(".default img").alt
+    let numberOfTables = event.target.countTables.value
 
     // Array pre záskanie odvety a match setting(single, doubles teams) a jeho naplnenie
     MainLeagueSettings.push(checkbox)
     MainLeagueSettings.push(settingsMatches)
     MainLeagueSettings.push(raceToPlay)
     MainLeagueSettings.push(choosedGameNumber)
-    console.log(MainLeagueSettings)
+    MainLeagueSettings.push(numberOfTables)
     
     // Uloženie League System Settings do Local Storage
     saveLeagueSystemSettings(MainLeagueSettings)
@@ -43,6 +47,15 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
     event.target.raceTo.value = "1"
     event.target.querySelector(".default img").src = "img/eight-ball.png"
     event.target.querySelector(".default img").alt = "eight-ball"
+    event.target.countTables.value = "1"
+
+    // naplnenie stolov do zoznamu registrovaných stolov pre možnosť hrania
+    registeredTables = []
+    for(let oneTable=1; oneTable <= MainLeagueSettings[4]; oneTable++){
+        registeredTables.push(oneTable)
+    }
+    // uloženie všetkých stolov do localStorage
+    saveNumberOfTables(registeredTables)
 
     
     // Úprava registračného formulára pri nastaveniach pre dvojice a teamy

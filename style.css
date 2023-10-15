@@ -141,6 +141,7 @@ header img {
 #league-settings label {
     font-size: 18px;
 }
+
 #match-settings {
     border-radius: 20px;
     background-color: transparent;
@@ -153,8 +154,8 @@ header img {
     margin-left: 20px;
 }
 
-/* Race to - hrá sa do */
-#league-settings #raceTo{
+/* Race to - hrá sa do Počet stolov*/
+#league-settings #raceTo, #league-settings #count-tables{
     width: 70px;
     padding: 4px 10px 4px 2px;
     font-size: 18px;
@@ -162,6 +163,7 @@ header img {
     border-radius: 20px;
     border: 5px solid rgba(0, 0, 0, 0.608);
     box-shadow: 0 0 3px 3px #888888;
+    margin-top: 5px;
   }
 
 /* Option list pre výber typu hry */
@@ -622,6 +624,36 @@ header img {
     align-items: center;
 }
 
+.leagueRound h1 {
+    position: relative;
+    left: 3%;
+}
+
+.matchInformation {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.tableNr {
+    width: 6%;
+    border: 5px solid rgba(0, 0, 0, 0.608);
+    border-radius: 15px;
+    box-shadow: 0 0 3px 3px #888888;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    text-align: center;
+    margin-left: 0.75%;
+}
+
+.tableNr h3 {
+    width: 100%;
+}
+
 /* One match line */
 .general-match {
     width: 98%;
@@ -638,12 +670,16 @@ header img {
 
 /* Aktívny zápas, ktorý sa hrá */
 .activeLeagueMatch {
-    background-color: rgb(7, 176, 120);
+    background-color: #07b078;
+    color: #fff;
+}
+.waitingLeagueMatch {
+    background-color: #8db6bd;
     color: #fff;
 }
 /* Ukončený ligový zápas */
 .fisnishedLeagueMatch {
-    background-color: rgb(30, 38, 35);
+    background-color: #1e2623;
     color: #fff;
     border: 5px solid rgba(0, 0, 0, 0.608);
     box-shadow: 0 0 3px 5px #888888;
@@ -676,6 +712,13 @@ header img {
 .fisnishedLeagueMatch button {
     visibility: hidden;
 }
+
+/* typ hry obrázok v zápasoch */
+.general-match img {
+    width: 20px;
+    height: 20px;
+}
+
 
 
 /* Results container pre tabuľku výsledkov*/
@@ -923,6 +966,31 @@ header img {
     font-size: 14px;
     padding-left: 20px;
     padding-right: 20px;
+}
+
+/* modal vybratie stola okrem teamov */
+.chooseTable, .chooseTable-teams {
+    width: 50%;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+}
+.wrapper {
+    width: 50%;
+    padding: 20px;
+    max-height: 150px;
+}
+.tableName {
+    width: 50%;
+    white-space: nowrap;
+    font-weight: 700;
+    text-align: center;
+}
+
+.table-options, .table-options-teams {
+    width: 100%;
+    cursor: pointer;
+    text-align-last:center;
 }
 
 

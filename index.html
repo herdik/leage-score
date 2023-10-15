@@ -51,6 +51,31 @@
                     </span>
                 </div>
             </div>
+
+            <div class="chooseTable-teams">
+                <div class="tableName">
+                    Výber stola
+                </div>
+                
+                <div class="wrapper">
+                    <select name="tableOptionsTeams" id="" class="table-options-teams" onfocus='this.size=3;'
+                    onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                        <!-- <option value="">1</option>
+                        <option value="">2</option>
+                        <option value="">3</option>
+                        <option value="">4</option>
+                        <option value="">5</option>
+                        <option value="">6</option>
+                        <option value="">7</option>
+                        <option value="">8</option>
+                        <option value="">9</option>
+                        <option value="">10</option>
+                        <option value="">11</option>
+                        <option value="">12</option> -->
+                    </select>
+                </div>
+
+            </div>
         </form>
     </dialog>
 
@@ -75,6 +100,31 @@
                     <span class="pl2-span">Gabriel Katona</span>
                 </div>
             </div>
+            <div class="chooseTable">
+                <div class="tableName">
+                    Výber stola
+                </div>
+                
+                <div class="wrapper">
+                    <select name="tableOptions" id="" class="table-options" onfocus='this.size=3;'
+                    onblur='this.size=1;' onchange='this.size=1; this.blur();'>
+                        <!-- <option value="">1</option>
+                        <option value="">2</option>
+                        <option value="">3</option>
+                        <option value="">4</option>
+                        <option value="">5</option>
+                        <option value="">6</option>
+                        <option value="">7</option>
+                        <option value="">8</option>
+                        <option value="">9</option>
+                        <option value="">10</option>
+                        <option value="">11</option>
+                        <option value="">12</option> -->
+                    </select>
+                </div>
+
+            </div>
+            
         </form>
     </dialog>
     <!-- Hlavný container -->
@@ -120,8 +170,14 @@
                     <option value="doubles">Dvojice</option>
                     <option value="teams">Teamy</option>
                 </select><br>
+                <!-- Hrať do -->
+
                 <label for="raceTo">Hrať do</label>
                 <input type="number" id="raceTo" min="0" value="1" step="1" name="raceTo"><br>
+
+                <!-- Počet stolov -->
+                <label for="count-tables">Počet stolov</label>
+                <input type="number" id="count-tables" min="0" value="1" step="1" name="countTables"><br>
                 
                 <!-- výber typu hry -->
                 <div class="game-menu">
@@ -295,20 +351,64 @@
             
             <!-- <div class="leagueRound">
                 <h1>1.kolo</h1>
-                <div class="general-match">
-                    <span class="pl1-span">Brázdil</span>
-                    <label class="pl1-label">0</label>
-                    <button>Zapnúť</button>
-                    <label class="pl2-label">0</label>
-                    <span class="pl2-span">Gabriel Katona</span>
+                
+                <div class="matchInformation">
+                    
+                    <div class="tableNr">
+                        <h3>T 1</h3>
+                    </div>
+                    
+                    <div class="general-match">
+                        <span class="pl1-span">Marián Brázdil</span>
+                        <label class="pl1-label">0</label>
+                        <div class="btnAndGame">
+                            <img src="img/eight-ball.png" alt="">
+                            <button>Zapnúť</button>
+                        </div>
+                        <label class="pl2-label">0</label>
+                        <span class="pl2-span">Gabriel Katona</span>
+                    </div>
+
                 </div>
-                <div class="general-match">
-                    <span class="pl1-span">Juraj Herda</span>
-                    <label class="pl1-label">0</label>
-                    <button>Zapnúť</button>
-                    <label class="pl2-label">0</label>
-                    <span class="pl2-span">Gabriel Katona</span>
+
+                <div class="matchInformation">
+                    
+                    <div class="tableNr">
+                        <h3>T 3</h3>
+                    </div>
+                    
+                    <div class="general-match">
+                        <span class="pl1-span">Juraj Herda</span>
+                        <label class="pl1-label">0</label>
+                        <div class="btnAndGame">
+                            <img src="img/eight-ball.png" alt="">
+                            <button>Zapnúť</button>
+                        </div>
+                        <label class="pl2-label">0</label>
+                        <span class="pl2-span">Gabriel Katona</span>
+                    </div>
+
                 </div>
+
+                <div class="matchInformation">
+                    
+                    <div class="tableNr">
+                        <h3>T 12</h3>
+                    </div>
+                    
+                    <div class="general-match">
+                        <span class="pl1-span">Marián Brázdil</span>
+                        <label class="pl1-label">0</label>
+                        <div class="btnAndGame">
+                            <img src="img/eight-ball.png" alt="">
+                            <button>Zapnúť</button>
+                        </div>
+                        <label class="pl2-label">0</label>
+                        <span class="pl2-span">Juraj Herda</span>
+                    </div>
+
+                </div>
+                
             </div> -->
             
         </div>
