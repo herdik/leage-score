@@ -431,7 +431,7 @@ let generateLeagueRoundDiv = (roundNum) =>{
 }
 
 // html štruktúra pre div general-match, teda pre každý zápas, ktorý vložíme pod heading h1 s príšlušným kolom do divu league-matches
-let generateGeneralMatchDiv = (everyMatch, playingSystem, selectedGame) => {
+let generateGeneralMatchDiv = (everyMatch, playingSystem, selectedGame, matchRaceTo) => {
     const matchInfoDiv = document.createElement("div")
     matchInfoDiv.classList.add("matchInformation")
 
@@ -496,7 +496,7 @@ let generateGeneralMatchDiv = (everyMatch, playingSystem, selectedGame) => {
                     let selectedMatchMain = leagueMatches[legRound2][matchRound2]
                     let selectedUndermatch = leagueMatches[legRound2][matchRound2].underMatches[underMatchInRound2]
                     
-                    modifyModal(selectedUndermatch, selectedMatchMain, playingSystem, registeredTables)
+                    modifyModal(selectedUndermatch, selectedMatchMain, playingSystem, registeredTables, matchRaceTo)
                 
                     // let extesionUndermatches = leagueMatches[legRound2][matchRound2].underMatches
                     // let scoreFirstTeam = leagueMatches[legRound2][matchRound2].score1
@@ -515,7 +515,7 @@ let generateGeneralMatchDiv = (everyMatch, playingSystem, selectedGame) => {
                     if (registeredTables.length !== 0 || typeof everyMatch.tableNumber === "string"){
                         let leagueIndexes2 = getIndexSelectedMatch(leagueMatches, everyMatch.matchId)
                         // Funckia pre zmenu stavu aktívneho zápasu v prípade ak nie su nastavené teamy
-                        modifyModal(leagueMatches[leagueIndexes2[0]][leagueIndexes2[1]], false, playingSystem, registeredTables)
+                        modifyModal(leagueMatches[leagueIndexes2[0]][leagueIndexes2[1]], false, playingSystem, registeredTables, matchRaceTo)
                     } else {
                         console.log("nedostupný stôl")
                     }
@@ -528,8 +528,6 @@ let generateGeneralMatchDiv = (everyMatch, playingSystem, selectedGame) => {
             nrTableDiv.style.backgroundColor = "#6f6e00"
             generalMatchDiv.style.backgroundColor = "#6f6e00"
             if (registeredTables.length !== 0 ){
-                console.log(everyMatch.tableNumber)
-                console.log(registeredTables.length)
                 generalMatchDiv.classList.add("activeLeagueMatch")
                 button.textContent = "Upraviť"
             }
@@ -679,7 +677,7 @@ let generateGeneralMatchDiv = (everyMatch, playingSystem, selectedGame) => {
     
     // Aktívny zápas čakajúci na stôl
     if(button.textContent === "Upraviť" && everyMatch.tableNumber === false){
-        console.log(everyMatch)
+    
         if (everyMatch.underMatches === "active" || playingSystem !== "teams"){
             nrTableDiv.style.backgroundColor = "#6f6e00"
             generalMatchDiv.style.backgroundColor = "#6f6e00"
@@ -773,76 +771,82 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
     let playerScore2 = event.target.score2.value
     let selectedTable = event.target.tableOptions.value
 
-    // zapísanie vybraného stola užívateľom do localStorage konkrétneho zápasu
-    if (currentEditedMatch[0].tableNumber === false) {
-        currentEditedMatch[0].tableNumber = selectedTable
-        // vymazanie stola z dostupnosti po vybratí stola užívateľom
-        let delIndex = registeredTables.indexOf(Number(selectedTable))
-        registeredTables.splice(delIndex, 1)
-    } 
     
-    // currentEditedMatch[0] je premenná kde je preuložený selectedMatch, teda aktuálny vybraný zápas z leagueMatches
-    currentEditedMatch[0].score1 = playerScore1
-    currentEditedMatch[0].score2 = playerScore2
-    if (checkbox) {
-        currentEditedMatch[0].matchFinished = checkbox
-        currentEditedMatch[0].matchStart = false
-        // znovunaplenie zoznamu stolov po ukončení zápasu
-        if (typeof currentEditedMatch[0].tableNumber === "string")
-        registeredTables.push(Number(currentEditedMatch[0].tableNumber))
-
-    }
-
-    // pripočítať skóre bod do hlavného zápasu po ukončení podzápasu platí pre setting Teams
-    if (currentEditedMatch[0].underMatches === "active" && checkbox){
-        let undermatchesInMainMatch = []
-        playerScore1 > playerScore2 ? currentEditedMatch[1].score1 += 1 : currentEditedMatch[1].score2 += 1
-        currentEditedMatch[1].underMatches.forEach((underMatch) => {
-            if(underMatch.matchFinished){
-                undermatchesInMainMatch.push(underMatch.matchFinished)
-            }
-        })
-        // ukončenie hlavného nadzápasu ak je stav po odohratí 6 podzápasov nie je remíza a keď remíza je ale víťaž bude po ukončení 9 podzápasov
-        if((undermatchesInMainMatch.length === 6) && (currentEditedMatch[1].score1 != 3 && currentEditedMatch[1].score2 != 3)){
-            currentEditedMatch[1].matchFinished = true
-            currentEditedMatch[1].matchStart = false
-        } else if (undermatchesInMainMatch.length === 9) {
-            currentEditedMatch[1].matchFinished = true
-            currentEditedMatch[1].matchStart = false
-        }
-
-        // znovunaplnenie optionsSingle teda možnosti pre výber sigle hráča v prípade ak je stav zápasu 3:3 po ukončení základných podzápasov
-        // currentEditedMatch[1] reprezentuje hlavný zápas
-        let extesionUndermatches = currentEditedMatch[1].underMatches
-        
-        if ((currentEditedMatch[1].score1 === 3 && currentEditedMatch[1].score2 === 3) && (extesionUndermatches[6].matchStart != true && extesionUndermatches[7].matchStart != true && extesionUndermatches[8].matchStart != true )){
-            currentEditedMatch[1].optionsSingles1 = currentEditedMatch[1].playersTeam1.slice()
-            currentEditedMatch[1].optionsSingles2 = currentEditedMatch[1].playersTeam2.slice()
-        }
-
-    }
-
-    
-
-    // uloženie zmien v league LocalStorage
-    saveLeagueMatches(leagueMatches)
-    // Vykreslenie zmien na stránku z league LocalStorage
-    printLeagueMatches()
-
-    // uloženie aktualneho zoznamu stolov do LocalStorage
-    saveNumberOfTables(registeredTables)
-
     const modalWindow = document.querySelector("#modal")
-    modalWindow.close()
+    if ((checkbox) && (playerScore1 === playerScore2)){
+        console.log("warning")
+    } else {
+        // zapísanie vybraného stola užívateľom do localStorage konkrétneho zápasu
+        if (currentEditedMatch[0].tableNumber === false) {
+            currentEditedMatch[0].tableNumber = selectedTable
+            // vymazanie stola z dostupnosti po vybratí stola užívateľom
+            let delIndex = registeredTables.indexOf(Number(selectedTable))
+            registeredTables.splice(delIndex, 1)
+        } 
+        
+        // currentEditedMatch[0] je premenná kde je preuložený selectedMatch, teda aktuálny vybraný zápas z leagueMatches
+        currentEditedMatch[0].score1 = playerScore1
+        currentEditedMatch[0].score2 = playerScore2
 
-    // defaultné hodnoty
-    event.target.checkFinish.checked = false
+        // Ak užívateľ ozančil zápas ako ukončení ulož hodnoty z modal do Localstorage, nastav zápas ukončený a pridaj aktuálny stôl do zoznamu pre možnosť výberu stola
+        if (checkbox) {
+            currentEditedMatch[0].matchFinished = checkbox
+            currentEditedMatch[0].matchStart = false
+            // znovunaplenie zoznamu stolov po ukončení zápasu
+            if (typeof currentEditedMatch[0].tableNumber === "string")
+            registeredTables.push(Number(currentEditedMatch[0].tableNumber))
+
+        }
+
+        // pripočítať skóre bod do hlavného zápasu po ukončení podzápasu platí pre setting Teams
+        if (currentEditedMatch[0].underMatches === "active" && checkbox){
+            let undermatchesInMainMatch = []
+            playerScore1 > playerScore2 ? currentEditedMatch[1].score1 += 1 : currentEditedMatch[1].score2 += 1
+            currentEditedMatch[1].underMatches.forEach((underMatch) => {
+                if(underMatch.matchFinished){
+                    undermatchesInMainMatch.push(underMatch.matchFinished)
+                }
+            })
+            // ukončenie hlavného nadzápasu ak je stav po odohratí 6 podzápasov nie je remíza a keď remíza je ale víťaž bude po ukončení 9 podzápasov
+            if((undermatchesInMainMatch.length === 6) && (currentEditedMatch[1].score1 != 3 && currentEditedMatch[1].score2 != 3)){
+                currentEditedMatch[1].matchFinished = true
+                currentEditedMatch[1].matchStart = false
+            } else if (undermatchesInMainMatch.length === 9) {
+                currentEditedMatch[1].matchFinished = true
+                currentEditedMatch[1].matchStart = false
+            }
+
+            // znovunaplnenie optionsSingle teda možnosti pre výber sigle hráča v prípade ak je stav zápasu 3:3 po ukončení základných podzápasov
+            // currentEditedMatch[1] reprezentuje hlavný zápas
+            let extesionUndermatches = currentEditedMatch[1].underMatches
+            
+            if ((currentEditedMatch[1].score1 === 3 && currentEditedMatch[1].score2 === 3) && (extesionUndermatches[6].matchStart != true && extesionUndermatches[7].matchStart != true && extesionUndermatches[8].matchStart != true )){
+                currentEditedMatch[1].optionsSingles1 = currentEditedMatch[1].playersTeam1.slice()
+                currentEditedMatch[1].optionsSingles2 = currentEditedMatch[1].playersTeam2.slice()
+            }
+
+        }
+
+        // uloženie zmien v league LocalStorage
+        saveLeagueMatches(leagueMatches)
+        // Vykreslenie zmien na stránku z league LocalStorage
+        printLeagueMatches()
+
+        // uloženie aktualneho zoznamu stolov do LocalStorage
+        saveNumberOfTables(registeredTables)
+
+        // zatvorenie modálneho okna
+        modalWindow.close()
+
+        // defaultné hodnoty
+        event.target.checkFinish.checked = false
+    }
 
 })
 
 // Funckia pre zobrazenie vybraného aktívneho zápasu zavolaním modal dialog window, kde sa načítajú hodnoty zo selectedMatch
 // alebo vybraného podzápasu ak existuhú nastavenia pre teamy a po prvom stlační na modal boli vyvolení hráč z options z funckie firstModifyModalUndermatch()
-let modifyModal = (selectedMatch, mainSelectedMatch, playingSystemSettings, allPossibleTables) => {
+let modifyModal = (selectedMatch, mainSelectedMatch, playingSystemSettings, allPossibleTables, raceToInMatch) => {
     
     // uloženie do globálnej premennej aktuálny selectedMatch, mainSelectedMatch - to je hlavný nadzápas v prípade teamov  a allPossibleTables zoznam všetkých stolov
     currentEditedMatch = [selectedMatch, mainSelectedMatch, allPossibleTables]
@@ -859,6 +863,9 @@ let modifyModal = (selectedMatch, mainSelectedMatch, playingSystemSettings, allP
     document.querySelector(".pl2-span").textContent = secondPlayer
     document.querySelector(".pl2-label").value = secondPlayerScore
 
+    // obmedzenie užívateľom do koľko sa hrá každý zápas
+    document.querySelector(".pl1-label").max = raceToInMatch
+    document.querySelector(".pl2-label").max = raceToInMatch
     // Html štruktúra pre výber stola
     if (playingSystemSettings !== "teams"){
         
@@ -1099,12 +1106,12 @@ let printLeagueMatches = () => {
             document.querySelector(".league-matches").appendChild(divLeagueRound)
         
             oneRound.forEach((oneMatch) => {
-                let divGeneralMatch = generateGeneralMatchDiv(oneMatch, MainLeagueSettings[1], MainLeagueSettings[3])
+                let divGeneralMatch = generateGeneralMatchDiv(oneMatch, MainLeagueSettings[1], MainLeagueSettings[3], MainLeagueSettings[2])
                 divLeagueRound.appendChild(divGeneralMatch)
                 if(oneMatch.underMatches !== false){
                     // vytvorenie podzápasovej štruktúry
                     oneMatch.underMatches.forEach((oneUnderMatch, index) => {
-                        let divUnderMatch = generateGeneralMatchDiv(oneUnderMatch, MainLeagueSettings[1], MainLeagueSettings[3])
+                        let divUnderMatch = generateGeneralMatchDiv(oneUnderMatch, MainLeagueSettings[1], MainLeagueSettings[3], MainLeagueSettings[2])
                         // zobrazenie a skrytie podzápasov v prípade ak je stav po základných podzápasoch remíza
                         // rozhodujúce podzápasy sú od indexu 6
                         if(oneMatch.score1 >= 3 && oneMatch.score2 >= 3){
