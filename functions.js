@@ -1157,23 +1157,29 @@ let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
                     tableInfo.find(function(onePlayer){
                         if(onePlayer.playerId === findedPlayer1 && activeMatch === false){
                             onePlayer.playedMatches += played
-                            onePlayer.wins += Number(findedScore1)
-                            onePlayer.losses += Number(findedScore2)
-                            onePlayer.difference = onePlayer.wins - onePlayer.losses
+                            onePlayer.scoreWinnigs += Number(findedScore1)
+                            onePlayer.scoreLosses += Number(findedScore2)
+                            onePlayer.difference = onePlayer.scoreWinnigs - onePlayer.scoreLosses
                 
                             if (Number(findedScore1) > Number(findedScore2)){
                                 onePlayer.points += points
+                                onePlayer.matchWinnings += played
+                            } else {
+                                onePlayer.matchLosses += played
                             }
                             
                         }
                         if(onePlayer.playerId === findedPlayer2 && activeMatch === false){
                             onePlayer.playedMatches += played
-                            onePlayer.wins += Number(findedScore2)
-                            onePlayer.losses += Number(findedScore1)
-                            onePlayer.difference = onePlayer.wins - onePlayer.losses
+                            onePlayer.scoreWinnigs += Number(findedScore2)
+                            onePlayer.scoreLosses += Number(findedScore1)
+                            onePlayer.difference = onePlayer.scoreWinnigs - onePlayer.scoreLosses
                             
                             if (Number(findedScore2) > Number(findedScore1)){
                                 onePlayer.points += points
+                                onePlayer.matchWinnings += played
+                            } else {
+                                onePlayer.matchLosses += played
                             }
                             
                         }
@@ -1199,8 +1205,9 @@ let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
         <td>${number + 1}</td>
         <td>${onePlayer.playerName}</td>
         <td>${onePlayer.playedMatches}</td>
-        <td>${onePlayer.wins}</td>
-        <td>${onePlayer.losses}</td>
+        <td>${onePlayer.matchWinnings}</td>
+        <td>${onePlayer.matchLosses}</td>
+        <td>${onePlayer.scoreWinnigs}:${onePlayer.scoreLosses}</td>
         <td>${onePlayer.difference}</td>
         <td>${onePlayer.points}</td>
         `
