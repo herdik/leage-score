@@ -773,8 +773,10 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
 
     
     const modalWindow = document.querySelector("#modal")
+    const modalWarning = document.querySelector("#modal-warning")
+
     if ((checkbox) && (playerScore1 === playerScore2)){
-        console.log("warning")
+        modalWarning.showModal()
     } else {
         // zapísanie vybraného stola užívateľom do localStorage konkrétneho zápasu
         if (currentEditedMatch[0].tableNumber === false) {
@@ -841,6 +843,13 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
         // defaultné hodnoty
         event.target.checkFinish.checked = false
     }
+
+})
+
+// zatvorenie WARNING MODAL ak bol otvorený
+document.querySelector("#confirmBtn").addEventListener("click", () => {
+    const modalWarning = document.querySelector("#modal-warning")
+    modalWarning.close()
 
 })
 
