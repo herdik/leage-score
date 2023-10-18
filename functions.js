@@ -816,8 +816,21 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
             } else if (undermatchesInMainMatch.length === 9) {
                 currentEditedMatch[1].matchFinished = true
                 currentEditedMatch[1].matchStart = false
+                // Ak sú ukončené všetky zápasy tak zapíš pre výherné mužstvo vyhru 4:3 a nie 6:3 alebo 5:4
+                let finishedMainMatch = (currentEditedMatch[1].underMatches.every((undermatchToCheck) => {
+                    return undermatchToCheck.matchFinished === true
+                }))
+                if (finishedMainMatch){
+                    if (currentEditedMatch[1].score1 > currentEditedMatch[1].score2){
+                        currentEditedMatch[1].score1 = 4
+                        currentEditedMatch[1].score2 = 3
+                    } else {
+                        currentEditedMatch[1].score1 = 3
+                        currentEditedMatch[1].score2 = 4
+                    }
+                }
             }
-
+            
             // znovunaplnenie optionsSingle teda možnosti pre výber sigle hráča v prípade ak je stav zápasu 3:3 po ukončení základných podzápasov
             // currentEditedMatch[1] reprezentuje hlavný zápas
             let extesionUndermatches = currentEditedMatch[1].underMatches
