@@ -13,10 +13,95 @@ let registeredTeamsArray = getRegisteredTeams()
 // Zavolanie funkcie kde sú registrované všetky dostupné stolyy, v prípade že nemám ani jeden stôl tak vytvorí prázdne pole
 let registeredTables = getNumberOfTables()
 
-// Nastavenie pre každý input number teda pre zadávanie skóre jednotnú maximálnu hodnotu
-document.querySelectorAll('input[type="number"]').forEach((scoreMax) => {
-    scoreMax.setAttribute("max",10)
+// Zavolanie funkcie kde je názov ligy , v prípade že nie je zadaný názov ligy tak vytvorí prázdne pole
+let nameOfLeague = getLeagueName()
+
+// Zavolanie funkcie kde sú aktuálny ligové zápasy, v prípade ak neexistujú, tak sa vytvorí prázdne pole
+let leagueMatches = getLeagueMatches()
+
+// Zavolanie funkcie kde je ligová tabuľka so všetkými hráčmi a výsledkami, v prípade ak neexistujú, tak sa vytvorí prázdne pole
+let leagueTable = getLeagueTable()
+
+
+let changeButton = document.createElement("button")
+changeButton.classList.add("changeBtn")
+document.querySelector(".first-container").appendChild(changeButton)
+changeButton.classList.add("hide")
+changeButton.textContent = "Registrovať družstvo"
+
+
+// show or correct registration information for doubles and teams
+if(MainLeagueSettings[1] === "doubles"){
+    document.querySelector(".playerInfos").innerHTML = `
+        <input type="text" placeholder="Meno 1" name="firstName">
+        <input type="text" placeholder="Priezvisko 1" name="secondName"><br>
+        <input type="text" placeholder="Meno 2" name="firstName2">
+        <input type="text" placeholder="Priezvisko 2" name="secondName2"><br>
+        <input type="text" placeholder="Klub" name="playersClub">
+        <input class="submit" type="submit" value="Zapísať" name="submitForm"><br>
+        `
+} else if (MainLeagueSettings[1] === "teams"){
+    
+    document.querySelector(".playerInfos").innerHTML = `
+        <input type="text" placeholder="Meno" name="firstName">
+        <input type="text" placeholder="Priezvisko" name="secondName"><br>
+        <input type="text" placeholder="Klub" name="playersClub">
+        <input class="submit" type="submit" value="Zapísať" name="submitForm"><br>
+        `
+    
+    changeButton.classList.add("hide")
+}
+
+// Show box to set leaguename and window to set leaguesettings if they EXISTS in localStorage - remove hide class
+let showBasicSettings = checkExistLeagueAndHeadingLeague(nameOfLeague, MainLeagueSettings)
+if (showBasicSettings){
+    // odobratie classy hide pre zadávanie názvu ligy a nastavenia ligy
+    document.querySelector(".zero-container").classList.add("hide")
+    document.querySelector(".system-container").classList.add("hide")
+} 
+
+// show league a league table if exists in localStorage and hide button create league
+let showLeagueAndTable = checkExistMainLeague(leagueMatches)
+if (showLeagueAndTable){
+    document.querySelector(".leagueHeading").classList.remove("hide")
+    document.querySelector(".league-matches").classList.remove("hide")
+    document.querySelector(".result-container").classList.remove("hide")
+    document.querySelector(".createLeague-container").classList.add("hide")
+    document.querySelector(".first-container").classList.add("hide")
+    document.querySelector(".leagueHeading h1").innerHTML = `
+    ${nameOfLeague}
+    <span class="left-icon"></span>
+    <span class="right-icon"></span>
+    `
+} else {
+    document.querySelector(".leagueHeading").classList.add("hide")
+    document.querySelector(".league-matches").classList.add("hide")
+    document.querySelector(".result-container").classList.add("hide")
+    document.querySelector(".createLeague-container").classList.remove("hide")
+    document.querySelector(".first-container").classList.remove("hide")
+}
+
+
+// name of the league  save to LocalStorage
+document.querySelector("#leagueName-form").addEventListener("submit", (event) => {
+    event.preventDefault()
+    let nameOfLeague = event.target.leagueName.value
+
+    document.querySelector(".leagueHeading h1").innerHTML = `
+    ${nameOfLeague}
+    <span class="left-icon"></span>
+    <span class="right-icon"></span>
+    `
+
+    saveLeagueNameLocalStorage(nameOfLeague)
+
+    event.target.leagueName.value = ""
+    
+    
+    
 })
+
+
 // System league settings
 document.querySelector("#league-settings").addEventListener("submit", (event) => {
     // vypnutie update/refresh formulára po odoslaní
@@ -69,53 +154,62 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
             <input class="submit" type="submit" value="Zapísať" name="submitForm"><br>
             `
     } else if (settingsMatches === "teams"){
-        let changeButton = document.createElement("button")
-        changeButton.classList.add("changeBtn")
-        changeButton.textContent = "Registrovať družstvo"
+        // let changeButton = document.createElement("button")
+        // changeButton.classList.add("changeBtn")
+        // changeButton.textContent = "Registrovať družstvo"
         document.querySelector(".playerInfos").innerHTML = `
             <input type="text" placeholder="Meno" name="firstName">
             <input type="text" placeholder="Priezvisko" name="secondName"><br>
             <input type="text" placeholder="Klub" name="playersClub">
             <input class="submit" type="submit" value="Zapísať" name="submitForm"><br>
             `
-        document.querySelector(".first-container").appendChild(changeButton)
-        // Vymazanie placeholdera pre club po kliknutí na tlačítko Zmena družstva
-        document.querySelector(".changeBtn").addEventListener("click", function(event){  
-            // pridanie objektu hráča do pola registrovaných teamov
-            let playersArray = []
-
-            registeredPlayersArray.forEach((onePlayer) => {
-                playersArray.push(onePlayer)
-            })
-
-            registeredTeamsArray.push({
-                id: uuidv4(),
-                teamPlayers: playersArray,
-                teamName: registeredPlayersArray[0].playersClub,
-                countryOption: playersArray[1].countryOption
-            })
-
-            saveRegisteredTeams(registeredTeamsArray)
-            
-             
-            // generate HTML Structure for class="second-container hide" and ol class="registered-players-list"
-            let oneHTML = generateHTMLstructure(registeredTeamsArray[registeredTeamsArray.length - 1], MainLeagueSettings[1])
-            document.querySelector(".registered-players-list").appendChild(oneHTML)
-
-            // Vymazanie klubu po stlační tlačítka registrovať družstvo a nastavenie defaultnej krajiny v Options MENU
-            // console.log(document.querySelector("#registration-form").children)
-            document.querySelector("#registration-form").playersClub.value = ""
-            // nastavenie defaultne prvej option v Options MENU(select id="countries" )
-            document.querySelector(".selected-country img").src = "img/flags/Slovensko.png"
-            document.querySelector(".selected-country img").alt = "Slovensko"
-            document.querySelector(".selected-countryName").textContent = "Slovensko"
-            
-            registeredPlayersArray = []
-            saveRegisteredPlayers(registeredPlayersArray)
-        })
+        // document.querySelector(".first-container").appendChild(changeButton)
+        
         document.querySelector(".changeBtn").classList.add("hide")
     }
+
+    // skrytie políčka pre zadávanie názvu ligy a skrytie nastavenia ligy
+    document.querySelector(".zero-container").classList.add("hide")
+    document.querySelector(".system-container").classList.add("hide")
 })
+
+
+// ====System for TEAMS registration all team click button registrovať družstvo====
+// Vymazanie placeholdera pre club po kliknutí na tlačítko Zmena družstva
+document.querySelector(".changeBtn").addEventListener("click", function(event){  
+    // pridanie objektu hráča do pola registrovaných teamov
+    let playersArray = []
+
+    registeredPlayersArray.forEach((onePlayer) => {
+        playersArray.push(onePlayer)
+    })
+
+    registeredTeamsArray.push({
+        id: uuidv4(),
+        teamPlayers: playersArray,
+        teamName: registeredPlayersArray[0].playersClub,
+        countryOption: playersArray[1].countryOption
+    })
+
+    saveRegisteredTeams(registeredTeamsArray)
+    
+     
+    // generate HTML Structure for class="second-container hide" and ol class="registered-players-list"
+    let oneHTML = generateHTMLstructure(registeredTeamsArray[registeredTeamsArray.length - 1], MainLeagueSettings[1])
+    document.querySelector(".registered-players-list").appendChild(oneHTML)
+
+    // Vymazanie klubu po stlační tlačítka registrovať družstvo a nastavenie defaultnej krajiny v Options MENU
+    // console.log(document.querySelector("#registration-form").children)
+    document.querySelector("#registration-form").playersClub.value = ""
+    // nastavenie defaultne prvej option v Options MENU(select id="countries" )
+    document.querySelector(".selected-country img").src = "img/flags/Slovensko.png"
+    document.querySelector(".selected-country img").alt = "Slovensko"
+    document.querySelector(".selected-countryName").textContent = "Slovensko"
+    
+    registeredPlayersArray = []
+    saveRegisteredPlayers(registeredPlayersArray)
+})
+
 
 // skrytie optionlist pre výber typu hry a otáčanie zobáčika
 document.querySelector(".defaultOption").addEventListener("click", () => {
@@ -315,14 +409,16 @@ document.querySelector(".leagueHeading h1").addEventListener("click", () => {
 
 })
 
-// Zavolanie funkcie kde sú aktuálny ligové zápasy, v prípade ak neexistujú, tak sa vytvorí prázdne pole
-let leagueMatches = getLeagueMatches()
-
-// Zavolanie funkcie kde je ligová tabuľka so všetkými hráčmi a výsledkami, v prípade ak neexistujú, tak sa vytvorí prázdne pole
-let leagueTable = getLeagueTable()
 
 // Tlačítko pre vytvorenie ligy a jeho následné skrytie
 document.querySelector(".createLeague-container button").addEventListener("click", () => {
+
+    // zobrazenie názvu ligy
+    document.querySelector(".leagueHeading h1").innerHTML = `
+    ${nameOfLeague}
+    <span class="left-icon"></span>
+    <span class="right-icon"></span>
+    `
 
     leagueMatches = []
     leagueTable = []
@@ -397,9 +493,22 @@ document.querySelector(".createLeague-container button").addEventListener("click
     // zavolanie funkcie pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
     generateHtmlPrintLeagueTable(leagueTable, leagueMatches)    
 
-    // zavolanie funkcie pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
-    // generateHtmlPrintLeagueTable()
-  
+    // print name of the league in "div leagueHeading", league matches and league table
+    // document.querySelector(".leagueHeading").classList.remove("hide")
+    // document.querySelector(".league-matches").classList.remove("hide")
+    // document.querySelector(".leagueHeading h1").innerHTML = `
+    // ${nameOfLeague}
+    // <span class="left-icon"></span>
+    // <span class="right-icon"></span>
+    // `
+
+    document.querySelector(".leagueHeading").classList.remove("hide")
+    document.querySelector(".league-matches").classList.remove("hide")
+    document.querySelector(".result-container").classList.remove("hide")
+    document.querySelector(".createLeague-container").classList.add("hide")
+    document.querySelector(".first-container").classList.add("hide")
+    
+    
 })
 
 
@@ -425,17 +534,17 @@ document.querySelector(".result-container h1").addEventListener("click", () => {
 // }
 
 
-// === Printing league name to web site ===
-if (getLeagueName().length <= 0){
-    document.querySelector(".leagueHeading").classList.add("hide")
-} else {
-    document.querySelector(".leagueHeading").classList.remove("hide")
-    document.querySelector(".leagueHeading h1").innerHTML = `
-    ${getLeagueName()}
-    <span class="left-icon"></span>
-    <span class="right-icon"></span>
-    `
-}
+// // === Printing league name to web site ===
+// if (getLeagueName().length <= 0){
+//     document.querySelector(".leagueHeading").classList.add("hide")
+// } else {
+//     document.querySelector(".leagueHeading").classList.remove("hide")
+//     document.querySelector(".leagueHeading h1").innerHTML = `
+//     ${getLeagueName()}
+//     <span class="left-icon"></span>
+//     <span class="right-icon"></span>
+//     `
+// }
 
 
 // zavolanie funkcie pre vykreslenie ligových zápasov do div .league-matches po otvorení prehliadača/stránky

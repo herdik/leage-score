@@ -14,23 +14,16 @@ let repeatingText = function(){
     setTimeout(repeatingText, speed)
 }
 
+// function to hide div zero-container and div system-container ak sa local storage nachádzajú nastavenia pre ligu
+let checkExistLeagueAndHeadingLeague = (generalLeagueName, generalSettings) => {
+    return generalLeagueName.length > 0 && generalSettings.length > 0
+}
 
-// function to print name of the league in "div leagueHeading"
+// function to show div leagueHeading and div league-matches and div result-container ak sa v local storage existuje league
+let checkExistMainLeague = (generalLeague) => {
+    return generalLeague.length > 0
+}
 
-document.querySelector("#leagueName-form").addEventListener("submit", (event) => {
-    event.preventDefault()
-    let nameOfLeague = event.target.leagueName.value
-
-    event.target.leagueName.value = ""
-    saveLeagueNameLocalStorage(nameOfLeague)
-    document.querySelector(".leagueHeading").classList.remove("hide")
-    document.querySelector(".leagueHeading h1").innerHTML = `
-    ${nameOfLeague}
-    <span class="left-icon"></span>
-    <span class="right-icon"></span>
-    `
-    
-})
 
 // Save league system settings to Local Storage
 let saveLeagueSystemSettings = (setLeagueSystem) => {
