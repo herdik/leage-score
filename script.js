@@ -22,12 +22,13 @@ let leagueMatches = getLeagueMatches()
 // Zavolanie funkcie kde je ligová tabuľka so všetkými hráčmi a výsledkami, v prípade ak neexistujú, tak sa vytvorí prázdne pole
 let leagueTable = getLeagueTable()
 
-
+// ================created registraton button for comleted registrated team -valid only for teams
 let changeButton = document.createElement("button")
 changeButton.classList.add("changeBtn")
 document.querySelector(".first-container").appendChild(changeButton)
 changeButton.classList.add("hide")
 changeButton.textContent = "Registrovať družstvo"
+// ==============================================
 
 
 // show or correct registration information for doubles and teams
