@@ -86,7 +86,7 @@ if (showLeagueAndTable){
 // name of the league  save to LocalStorage
 document.querySelector("#leagueName-form").addEventListener("submit", (event) => {
     event.preventDefault()
-    let nameOfLeague = event.target.leagueName.value
+    nameOfLeague = event.target.leagueName.value
 
     document.querySelector(".leagueHeading h1").innerHTML = `
     ${nameOfLeague}
