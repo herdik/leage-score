@@ -467,7 +467,8 @@ document.querySelector(".createLeague-container button").addEventListener("click
             scoreWinnigs: 0, 
             scoreLosses: 0, 
             difference: 0,
-            points: 0
+            points: 0, 
+            mutualMatchPoints: 0
         })
     });
     // Pridanie voľno do poľa pri nepárnom počte hráčov, teda aby každý hráč mal zápas v danom kole

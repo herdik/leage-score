@@ -843,6 +843,30 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
         // uloženie aktualneho zoznamu stolov do LocalStorage
         saveNumberOfTables(registeredTables)
 
+        // -----------časť pre zistenie ukončenia všetkých zápasov-------
+        // získanie statusu, či sú všetky zápasy ukončené
+        let isEveryMatchFinished = statusFinishedAllMatches(leagueMatches)
+        console.log(isEveryMatchFinished)
+        if (isEveryMatchFinished){
+            // pole kde sa budú ukladať polia s objektami s rovnakými bodmi
+            const mutualMatches = []
+            // hladanie bodov ktoré sa v tabuľke vyskytujú viac ako jeden krát
+            let tableDuplicatePoints = findDuplicateSamePoints(leagueTable)
+            if (tableDuplicatePoints.length >= 1){
+                tableDuplicatePoints.forEach((oneDuplicateNum) => {
+                    // nájdenie všetkých objektov s rovnakými bodmi, ktoré sú v poli 
+                    let myResult = getMatchSameWithPoints(oneDuplicateNum, leagueTable)
+                    // pole s objektami s rovnakými bodmi pushem do prázdneho pola pre porovnávanie
+                    mutualMatches.push(myResult)
+                })
+                // posielam do funkcie pole ''mutualMatches'' s objektami a pre každý objekt nájdem vzájmný zápas a porvnám víťaza a víťazovi do mutualMatchPoints pridám bod
+                console.log(mutualMatches)
+                compareMutualMatch(mutualMatches, leagueMatches)
+                
+            } 
+        }
+        // -----------časť pre zistenie ukončenia všetkých zápasov-------
+
         // zatvorenie modálneho okna
         modalWindow.close()
 
@@ -1147,7 +1171,7 @@ let printLeagueMatches = () => {
 
 // funkcia pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
 let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
-
+    
     if (leagueInfo.length > 0){
         leagueInfo.forEach((oneRound) => {
             oneRound.find(function(oneMatch){
@@ -1248,3 +1272,96 @@ let showPowerOnButtonUndermatches = (selectedMainMatch) => {
     // // uloženie zmien v league LocalStorage
     // saveLeagueMatches(leagueMatches)
 }
+
+// predpis pre funckiu pre získanie statusu, či sú všetky zápasy ukončené
+let statusFinishedAllMatches = (allMatches) => {
+    let allStatus = []
+    allMatches.forEach((choosedRound) => {
+        choosedRound.forEach((choosedMatch) => {
+            allStatus.push(choosedMatch.matchFinished)
+        })
+    })
+
+    let isEveryMatchFinished = allStatus.every((checkedStatus) => {
+        return checkedStatus === true
+    })
+
+    return isEveryMatchFinished
+
+}
+
+// zistenie objectov s rovnakým stavom bodov
+let findDuplicateSamePoints = (mainLeagueTable) => {
+    let myTest = []
+    
+    for (let i=0; i < mainLeagueTable.length; i++){
+        for (let y=0; y < mainLeagueTable.length; y++){
+            if (i !== y){
+                if(mainLeagueTable[i].points === mainLeagueTable[y].points){
+                    myTest.push(mainLeagueTable[i].points)
+                }
+            }
+        }
+    }
+    let unique = new Set(myTest)
+    let uniqueArray = Array.from(unique)
+    
+    return uniqueArray
+}
+
+
+// get mutual match - pre porovnanie vzájomných zápasov
+let getMatchSameWithPoints = (duplicatePoints, resultTable) => {
+    
+    // získam pole objektov, ktoré má rovnaké skóre ak sú všetky zápasy ukončené
+    let duplicatePointsObjet = resultTable.filter((tableLine) => {
+        let oneDuplicate = tableLine.points === duplicatePoints
+        return oneDuplicate
+    })
+    
+    return duplicatePointsObjet
+
+    // // filtrujem ligu a hľadám zápas kde su hľadané duplikované objekty s rovankými bodmi
+    // mainLeagueMatches.forEach((oneRoundInMatch) => {
+    //     oneRoundInMatch.filter((oneMainMatch) => {
+
+    //     })
+    // })
+}
+
+// compare mutual match - pre porovnanie vzájomných zápasov a zapísanie bodu do mutualMatchPoints pre vítazné mužstvo/hráča z porovnávaného zápasu
+let compareMutualMatch = (arraysToMutual, allMatchesInLeague) => {
+    // Pole polí s objektami kde, v každom poli sú objekty s rovnakými points - bodmi
+    arraysToMutual.forEach((arraySameObjetsPoints) => {
+        for(let i=0; i < arraySameObjetsPoints.length; i++){
+            for(let y=0; y < arraySameObjetsPoints.length; y++) {
+                if (y > i){
+                    allMatchesInLeague.forEach((oneLeagueRound) => {
+                        oneLeagueRound.forEach((oneLeagueMatch) => {
+                            let tableplayerId1 = arraySameObjetsPoints[i]
+                            let tableplayerId2 = arraySameObjetsPoints[y]
+                            if (oneLeagueMatch.player1Id === tableplayerId1.playerId && oneLeagueMatch.player2Id === tableplayerId2.playerId){
+                                if(Number(oneLeagueMatch.score1) > Number(oneLeagueMatch.score2)){
+                                    tableplayerId1.mutualMatchPoints += 1
+                                } else {
+                                    tableplayerId2.mutualMatchPoints += 1
+                                }
+                            } else if (oneLeagueMatch.player1Id === tableplayerId2.playerId && oneLeagueMatch.player2Id === tableplayerId1.playerId) {
+                                if(Number(oneLeagueMatch.score1) > Number(oneLeagueMatch.score2)){
+                                    tableplayerId2.mutualMatchPoints += 1
+                                } else {
+                                    tableplayerId1.mutualMatchPoints += 1
+                                }
+                            }
+                        })
+                    })
+                }
+            }
+        }
+    })
+    saveLeagueTable(leagueTable)
+}
+
+
+
+
