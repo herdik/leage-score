@@ -862,8 +862,9 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
                 // posielam do funkcie pole ''mutualMatches'' s objektami a pre každý objekt nájdem vzájmný zápas a porvnám víťaza a víťazovi do mutualMatchPoints pridám bod
                 console.log(mutualMatches)
                 compareMutualMatch(mutualMatches, leagueMatches)
-                
+                generateHtmlPrintLeagueTable(leagueTable, leagueMatches)
             } 
+            
         }
         // -----------časť pre zistenie ukončenia všetkých zápasov-------
 
