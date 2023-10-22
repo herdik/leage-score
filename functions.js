@@ -1248,18 +1248,60 @@ let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
 
 // Usporiadanie tabuľky podľa nastavených kritérií - 1.Body,  2.rozdiel skóre
 let sortsTable = function(myTable){
-    myTable.sort(function(a, b){
-        if(b.points < a.points){
-            return -1
-        } else if (a.points < b.points){
-            return 1
-        } else if (a.points === b.points)
-            if(b.difference < a.difference){
+    let finishedAllMatches = statusFinishedAllMatches(leagueMatches)
+    console.log(finishedAllMatches)
+    if (finishedAllMatches){
+        console.log("pokračuj v inom sortovaní")
+        myTable.sort(function(a, b){
+            if(b.points < a.points){
                 return -1
-            } else if (a.difference < b.difference){
+            } else if (a.points < b.points){
                 return 1
+            } else if (a.points === b.points){
+                if (b.mutualMatchPoints < a.mutualMatchPoints){
+                    return -1
+                } else if (a.mutualMatchPoints < b.mutualMatchPoints){
+                    return 1
+                } else if (a.mutualMatchPoints === b.mutualMatchPoints){
+                    if(b.difference < a.difference){
+                        return -1
+                    } else if (a.difference < b.difference){
+                        return 1
+                    } else if (a.difference === b.difference){
+                        if (b.scoreWinnigs < a.scoreWinnigs){
+                            return -1
+                        } else if (a.scoreWinnigs < b.scoreWinnigs){
+                            return 1
+                        }
+                    }
+                }
+                
             }
-    })
+                
+        })
+    } else {
+        myTable.sort(function(a, b){
+            if(b.points < a.points){
+                return -1
+            } else if (a.points < b.points){
+                return 1
+            } else if (a.points === b.points){
+                if(b.difference < a.difference){
+                    return -1
+                } else if (a.difference < b.difference){
+                    return 1
+                } else if (a.difference === b.difference){
+                    if (b.scoreWinnigs < a.scoreWinnigs){
+                        return -1
+                    } else if (a.scoreWinnigs < b.scoreWinnigs){
+                        return 1
+                    }
+                }
+            }
+                
+        })
+    }
+    
 }
 
 
@@ -1282,11 +1324,11 @@ let statusFinishedAllMatches = (allMatches) => {
         })
     })
 
-    let isEveryMatchFinished = allStatus.every((checkedStatus) => {
+    let allMatchesFinished = allStatus.every((checkedStatus) => {
         return checkedStatus === true
     })
 
-    return isEveryMatchFinished
+    return allMatchesFinished
 
 }
 
