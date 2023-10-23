@@ -370,7 +370,8 @@ let createLeague = function(checkedTeams, revengeMatch, playingSetting) {
                     revengeMatches[i].matchFinished = true
                     revengeMatches[i].matchStart = true
                 } else {
-                    // vytvorenie ligových podzápasov pre teamy funkcia
+                    if(playingSetting === "teams"){
+                    // vytvorenie ligových podzápasov pre teamy funkcia a naplnenie hráčov teamu, ktorí boli registrovaní pod svoj TEAM
                     revengeMatches[i].underMatches = createUnderTeamLeague()
                     revengeMatches[i].playersTeam1 = checkedTeams[(checkedTeams.length -1) - i].teamPlayers
                     revengeMatches[i].playersTeam2 = checkedTeams[i].teamPlayers
@@ -378,6 +379,7 @@ let createLeague = function(checkedTeams, revengeMatch, playingSetting) {
                     revengeMatches[i].optionsSingles2 = revengeMatches[i].playersTeam2.slice()
                     revengeMatches[i].optionsDoubles1 = createUniqDoubles(revengeMatches[i].playersTeam1)
                     revengeMatches[i].optionsDoubles2 = createUniqDoubles(revengeMatches[i].playersTeam2)
+                    }
                 }
             }
             
