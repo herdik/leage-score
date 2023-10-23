@@ -189,7 +189,8 @@ document.querySelector(".changeBtn").addEventListener("click", function(event){
         id: uuidv4(),
         teamPlayers: playersArray,
         teamName: registeredPlayersArray[0].playersClub,
-        countryOption: playersArray[1].countryOption
+        // pridanie vlajky na základe posledného registrovaného hráča do mužstva
+        countryOption: playersArray[playersArray.length -1].countryOption
     })
 
     saveRegisteredTeams(registeredTeamsArray)
@@ -450,11 +451,13 @@ document.querySelector(".createLeague-container button").addEventListener("click
             players.push({
                 player: playerInfo,
                 playerId: onePlayer.id,
+                playerCountry: onePlayer.countryOption
             })
         } else {
             players.push({
                 player: playerInfo,
                 playerId: onePlayer.id,
+                playerCountry: onePlayer.countryOption,
                 teamPlayers: onePlayer.teamPlayers
             })
         }
@@ -476,6 +479,7 @@ document.querySelector(".createLeague-container button").addEventListener("click
         players.push({
             player: "Voľno",
             playerId: 0,
+            playerCountry: false
         })
     }
 

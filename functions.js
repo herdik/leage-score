@@ -267,9 +267,11 @@ let createUnderTeamLeague = () => {
             matchId: uuidv4(),
             player1: playerInMatch,
             player1Id: "Neznáme", 
+            player1Country: false,
             score1: 0,
             player2: playerInMatch,
             player2Id: "Neznáme",
+            player2Country: false,
             score2: 0,
             underMatches: "oneUnderMatch",
             choosedGame: typeOfGame
@@ -319,12 +321,14 @@ let createLeague = function(checkedTeams, revengeMatch, playingSetting) {
                 matchId: uuidv4(),
                 player1: checkedTeams[i].player,
                 player1Id: checkedTeams[i].playerId, 
+                player1Country: checkedTeams[i].playerCountry, 
                 playersTeam1: false,
                 optionsSingles1: false,
                 optionsDoubles1: false,
                 score1: 0,
                 player2: checkedTeams[(checkedTeams.length -1) - i].player,
                 player2Id: checkedTeams[(checkedTeams.length -1) - i].playerId,
+                player2Country: checkedTeams[(checkedTeams.length -1) - i].playerCountry, 
                 playersTeam2: false,
                 optionsSingles2: false,
                 optionsDoubles2: false,
@@ -357,10 +361,12 @@ let createLeague = function(checkedTeams, revengeMatch, playingSetting) {
                     matchId: uuidv4(),
                     player1: checkedTeams[(checkedTeams.length -1) - i].player,
                     player1Id: checkedTeams[(checkedTeams.length -1) - i].playerId,
+                    player1Country: checkedTeams[(checkedTeams.length -1) - i].playerCountry,
                     playersTeam1: false,
                     score1: 0,
                     player2: checkedTeams[i].player,
                     player2Id: checkedTeams[i].playerId, 
+                    player2Country: checkedTeams[i].playerCountry,
                     playersTeam2: false,
                     score2: 0,
                     underMatches: false,
@@ -552,11 +558,21 @@ let generateGeneralMatchDiv = (everyMatch, playingSystem, selectedGame, matchRac
     })
 
     // Naplnenie zápasov podľa dát z localStorage
-    spanpl1.textContent = everyMatch.player1
+    if (everyMatch.player1Country === false){
+        spanpl1.textContent = everyMatch.player1
+    } else {
+        spanpl1.innerHTML = `<img src="img/flags/${everyMatch.player1Country}.png" alt=""> ${everyMatch.player1}`
+    }
     labelpl1.textContent = everyMatch.score1
-    
+
     labelpl2.textContent = everyMatch.score2
-    spanpl2.textContent = everyMatch.player2
+
+    if (everyMatch.player2Country === false){
+        spanpl2.textContent = everyMatch.player2
+    }else {
+        spanpl2.innerHTML = `<img src="img/flags/${everyMatch.player2Country}.png" alt=""> ${everyMatch.player2}`
+    }
+    
 
     // Nastavenie pre zobrazenie vybranej hry pre jednotlivcov a dvojice a za else je nastavenie pre Teams
     if(playingSystem !== "teams"){
@@ -989,8 +1005,13 @@ document.querySelector("#selectForm").addEventListener("submit", (event) => {
         if (oneMatch.matchId === emptyMatchID) {
             oneMatch.player1 = team1DoubleId.length < 2 ? selectedPlayer1[0].firstName + " " + selectedPlayer1[0].secondName : selectedPlayer1[0].firstName + " " + selectedPlayer1[0].secondName + " - " + selectedPlayer1[1].firstName + " " + selectedPlayer1[1].secondName
             oneMatch.player1Id = team1DoubleId.length < 2 ? selectedPlayer1[0].id : [selectedPlayer1[0].id, selectedPlayer1[1].id]
+            // pridanie vlajky do podzápasov na základe vlajky hlavného mužstva v zápase
+            oneMatch.player1Country = currentEditedMatch[0].player1Country
             oneMatch.player2 = team2DoubleId.length < 2 ? selectedPlayer2[0].firstName + " " + selectedPlayer2[0].secondName : selectedPlayer2[0].firstName + " " + selectedPlayer2[0].secondName + " - " + selectedPlayer2[1].firstName + " " + selectedPlayer2[1].secondName
             oneMatch.player2Id = team2DoubleId.length < 2 ? selectedPlayer2[0].id : [selectedPlayer2[0].id, selectedPlayer2[1].id]
+            // pridanie vlajky do podzápasov na základe vlajky hlavného mužstva v zápase
+            oneMatch.player2Country = currentEditedMatch[0].player2Country
+
             // zapísanie vybraného stola užívateľom pre podzápas - v hlavnom zápase do localStorage konkrétneho zápasu
             if (oneMatch.tableNumber === false) {
                 oneMatch.tableNumber = selectedTableInMatch

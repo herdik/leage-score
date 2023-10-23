@@ -689,6 +689,11 @@ header img {
 .general-match span {
     width: 45%;
 }
+.general-match span img {
+    border-radius: 25px;
+    position: relative;
+    top: 4px;
+}
 
 /* Score in one match line */
 .general-match label {
