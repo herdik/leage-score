@@ -464,6 +464,7 @@ document.querySelector(".createLeague-container button").addEventListener("click
         leagueTable.push({
             playerName: playerInfo,
             playerId: onePlayer.id, 
+            playerCountry: onePlayer.countryOption,
             playedMatches: 0,
             matchWinnings: 0,
             matchLosses: 0, 

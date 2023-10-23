@@ -1273,6 +1273,7 @@ let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo, systemSettings) => {
         const tbodyTr = document.createElement("tr")
         tbodyTr.innerHTML = `
         <td>${number + 1}</td>
+        <td><img src="img/flags/${onePlayer.playerCountry}.png" alt=""></td>
         <td>${onePlayer.playerName}</td>
         <td>${onePlayer.playedMatches}</td>
         <td>${onePlayer.matchWinnings}</td>
