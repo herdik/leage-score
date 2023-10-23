@@ -10,6 +10,10 @@
 
 body {
     position: relative;
+    background-image:  linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)), url('img/background.jpg');
+    background-size: cover;
+    height: 100vh;
+    background-attachment: fixed;
 }
 
 /* default nastavenia pre outline */
@@ -20,11 +24,14 @@ input:focus {
 /* Hlavný container */
 .main-container {
     max-width: 1140px;
-    margin: 0 auto;
+    margin: 40px auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: #ffff;
+    border-radius: 20px;
+    box-shadow: 0 0 10px 10px #888888;
 }
 
 /* Hlavný názov */
@@ -732,6 +739,7 @@ header img {
     border: 5px solid rgba(0, 0, 0, 0.608);
     border-radius: 20px;
     box-shadow: 0 0 10px 10px #888888;
+    margin-bottom: 20px;
 }
 
 /* Tabuľka Hlavý nadpis Heading */
