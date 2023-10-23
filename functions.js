@@ -650,7 +650,7 @@ let generateGeneralMatchDiv = (everyMatch, playingSystem, selectedGame, matchRac
         generalMatchDiv.classList.remove("activeLeagueMatch")
         generalMatchDiv.classList.add("fisnishedLeagueMatch")
         button.textContent = "Ukončiť"
-        generateHtmlPrintLeagueTable(leagueTable, leagueMatches)
+        generateHtmlPrintLeagueTable(leagueTable, leagueMatches, MainLeagueSettings)
         if(playingSystem !== "teams"){
             // nastavenia pre stôl ak je zápas ukončený
             nrTableDiv.classList.add("fisnishedLeagueMatch")
@@ -862,7 +862,7 @@ document.querySelector("#matchForm").addEventListener("submit", (event) => {
                 // posielam do funkcie pole ''mutualMatches'' s objektami a pre každý objekt nájdem vzájmný zápas a porvnám víťaza a víťazovi do mutualMatchPoints pridám bod
                 console.log(mutualMatches)
                 compareMutualMatch(mutualMatches, leagueMatches)
-                generateHtmlPrintLeagueTable(leagueTable, leagueMatches)
+                generateHtmlPrintLeagueTable(leagueTable, leagueMatches, MainLeagueSettings)
             } 
             
         }
@@ -1171,13 +1171,15 @@ let printLeagueMatches = () => {
 }
 
 // funkcia pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
-let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
+let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo, systemSettings) => {
     
     if (leagueInfo.length > 0){
         leagueInfo.forEach((oneRound) => {
             oneRound.find(function(oneMatch){
                 if (oneMatch.matchFinished === true && oneMatch.matchRegistered != true){
                     let played = 1
+                    let pointsLost = 1
+                    let pointsWins = 2
                     let points = 3
                     let findedPlayer1 = oneMatch.player1Id
                     let findedScore1 = oneMatch.score1
@@ -1193,10 +1195,17 @@ let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
                             onePlayer.difference = onePlayer.scoreWinnigs - onePlayer.scoreLosses
                 
                             if (Number(findedScore1) > Number(findedScore2)){
-                                onePlayer.points += points
+                                if (systemSettings[1] === "teams" && Number(findedScore2) === 3){
+                                    onePlayer.points += pointsWins
+                                } else {
+                                    onePlayer.points += points
+                                }
                                 onePlayer.matchWinnings += played
                             } else {
                                 onePlayer.matchLosses += played
+                                if (systemSettings[1] === "teams" && Number(findedScore1) === 3){
+                                    onePlayer.points += pointsLost
+                                }
                             }
                             
                         }
@@ -1207,10 +1216,17 @@ let generateHtmlPrintLeagueTable = (tableInfo, leagueInfo) => {
                             onePlayer.difference = onePlayer.scoreWinnigs - onePlayer.scoreLosses
                             
                             if (Number(findedScore2) > Number(findedScore1)){
-                                onePlayer.points += points
+                                if (systemSettings[1] === "teams" && Number(findedScore1) === 3){
+                                    onePlayer.points += pointsWins
+                                } else {
+                                    onePlayer.points += points
+                                }
                                 onePlayer.matchWinnings += played
                             } else {
                                 onePlayer.matchLosses += played
+                                if (systemSettings[1] === "teams" && Number(findedScore2) === 3){
+                                    onePlayer.points += pointsLost
+                                }
                             }
                             
                         }

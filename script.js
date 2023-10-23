@@ -493,7 +493,7 @@ document.querySelector(".createLeague-container button").addEventListener("click
     printLeagueMatches()
 
     // zavolanie funkcie pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
-    generateHtmlPrintLeagueTable(leagueTable, leagueMatches)    
+    generateHtmlPrintLeagueTable(leagueTable, leagueMatches, MainLeagueSettings)    
 
     // print name of the league in "div leagueHeading", league matches and league table
     // document.querySelector(".leagueHeading").classList.remove("hide")
@@ -553,4 +553,4 @@ document.querySelector(".result-container h1").addEventListener("click", () => {
 printLeagueMatches()
 
 // zavolanie funkcie pre vykreslenie tabuľky výsledkov ligových zápasov do div .result-container +  results-table po otvorení prehliadača/stránky
-generateHtmlPrintLeagueTable(leagueTable, leagueMatches)
+generateHtmlPrintLeagueTable(leagueTable, leagueMatches, MainLeagueSettings)
