@@ -1,3 +1,7 @@
+$(function(){
+    $(".main-container").hide().fadeIn(4000);
+});
+
 // *** called function to repeat and print name of league system
 repeatingText()
 
@@ -109,7 +113,7 @@ document.querySelector("#league-settings").addEventListener("submit", (event) =>
     event.preventDefault()
     MainLeagueSettings = []
     // Skrytie formulára po odoslaní nastavení
-    document.querySelector(".system-container").classList.add("hide")
+    // document.querySelector(".system-container").classList.add("hide")
     
     // Variable odoslané do MainLeagueSettings()
     let checkbox = event.target.checkbox.checked

@@ -23,7 +23,7 @@ input:focus {
 
 /* Hlavný container */
 .main-container {
-    max-width: 1140px;
+    max-width: 1200px;
     margin: 40px auto;
     display: flex;
     flex-direction: column;
@@ -32,6 +32,7 @@ input:focus {
     background-color: #ffff;
     border-radius: 20px;
     box-shadow: 0 0 10px 10px #888888;
+    padding: 0 10px;
 }
 
 /* Hlavný názov */
